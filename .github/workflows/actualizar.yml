@@ -1,0 +1,51 @@
+name: Actualizar carta desde Fudo
+
+on:
+  schedule:
+    - cron: '15 */3 * * *'   # cada 3 horas (hora UTC)
+  workflow_dispatch:         # también se puede lanzar a mano desde la pestaña Actions
+  push:
+    branches: [main]
+    paths:
+      - 'plantilla/**'
+      - 'scripts/**'
+      - 'docs/img/**'
+      - '.github/workflows/**'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  carta:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Leer los precios de Fudo y armar la carta
+        shell: pwsh
+        run: ./scripts/actualizar_web.ps1
+
+      - name: Guardar los últimos precios si cambiaron
+        run: |
+          git config user.name "carta-bot"
+          git config user.email "carta-bot@users.noreply.github.com"
+          git add data/precios_fudo.json
+          git diff --cached --quiet || (git commit -m "Precios actualizados desde Fudo" && git push)
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
