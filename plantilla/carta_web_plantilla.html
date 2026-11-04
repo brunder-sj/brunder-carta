@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1a13">
+<meta name="color-scheme" content="dark">
+<title>Brunder · Carta</title>
+<meta name="description" content="Carta de Brunder, cerveza artesanal en San Juan: promos, cervezas, hamburguesas, pachatas, pizzas, tragos y vinos.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Brunder · Cerveza Artesanal">
+<meta property="og:title" content="Carta de Brunder">
+<meta property="og:description" content="Promos, cervezas artesanales, hamburguesas, pachatas, pizzas y tragos. Av. Libertador 1538 (O), San Juan.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f2e22'/%3E%3Ctext x='16' y='23' font-size='20' font-family='serif' font-weight='700' text-anchor='middle' fill='%23d8ab4e'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ───────────── Tokens ───────────── */
+:root{
+  --bg:#0a1a13; --bg-2:#0e2419; --bg-3:#133023;
+  --ink:#f6f0e2; --mut:rgba(246,240,226,.70); --faint:rgba(246,240,226,.46); --line:rgba(246,240,226,.12);
+  --gold:#d8ab4e; --gold-2:#f1cd7c; --gold-d:#a8791f; --green:#184631; --green-3:#2f8059;
+  --r:20px; --r-s:12px;
+  --disp:'Barlow Condensed','Bahnschrift','Arial Narrow',sans-serif;
+  --txt:system-ui,-apple-system,'SF Pro Text','Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  --press-out:cubic-bezier(.2,1.25,.4,1);   /* al soltar, vuelve con un pequeño rebote (el gesto tuvo impulso) */
+  --nav-h:56px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent }
+[hidden]{ display:none !important }
+html{ background:var(--bg); -webkit-text-size-adjust:100% }
+body{ font:400 .9375rem/1.45 var(--txt); font-optical-sizing:auto; color:var(--ink); background:
+    radial-gradient(120% 60% at 50% 0%, #12392a 0, transparent 60%), var(--bg);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; font-variant-numeric:tabular-nums }
+body.lock{ overflow:hidden }
+img{ display:block; max-width:100%; user-select:none; -webkit-user-drag:none }
+a{ color:inherit; text-decoration:none }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer }
+a,button,[data-open]{ touch-action:manipulation }
+:focus-visible{ outline:2px solid var(--gold-2); outline-offset:3px; border-radius:8px }
+.wrap{ max-width:1080px; margin:0 auto; padding:0 18px }
+
+/* ───────────── Aparición al hacer scroll ───────────── */
+.rv{ opacity:0; transform:translateY(22px) }
+.rv.in{ opacity:1; transform:none; transition:opacity .7s var(--ease) calc(var(--i,0) * 70ms), transform .7s var(--ease) calc(var(--i,0) * 70ms) }
+
+/* ───────────── Cabecera ───────────── */
+.hero{ position:relative; min-height:min(82svh,640px); display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; isolation:isolate }
+.hero-bg{ position:absolute; inset:-8% 0 -8%; z-index:-3; will-change:transform }
+.hero-bg img{ width:100%; height:100%; object-fit:cover; object-position:50% 38%; animation:kb 22s ease-in-out infinite alternate }
+@keyframes kb{ from{ transform:scale(1.04) } to{ transform:scale(1.16) } }
+.hero-shade{ position:absolute; inset:0; z-index:-2; background:
+   linear-gradient(180deg, rgba(10,26,19,.55) 0, rgba(10,26,19,.35) 38%, rgba(10,26,19,.86) 82%, var(--bg) 100%),
+   radial-gradient(70% 55% at 50% 45%, rgba(10,26,19,.1), rgba(10,26,19,.55)) }
+.hero-in{ padding:44px 22px 90px; display:flex; flex-direction:column; align-items:center; gap:18px }
+/* estado del local: chico y discreto, arriba de todo en la portada, sin competir con el logo */
+.open-pill{ position:absolute; top:14px; left:50%; transform:translateX(-50%); z-index:2; display:inline-flex; align-items:center; gap:6px; padding:4px 10px 4px 8px; border-radius:99px;
+  font-size:0.6875rem; font-weight:550; letter-spacing:.03em; color:rgba(246,240,226,.82); white-space:nowrap;
+  background:rgba(14,36,25,.38); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px) }
+.open-pill .dot{ width:6px; height:6px; border-radius:50%; background:#5b6b62 }
+.open-pill.on .dot{ background:#53e08f; box-shadow:0 0 0 0 rgba(83,224,143,.6); animation:ping 2.4s infinite }
+@keyframes ping{ 70%{ box-shadow:0 0 0 9px rgba(83,224,143,0) } 100%{ box-shadow:0 0 0 0 rgba(83,224,143,0) } }
+.hero-logo{ width:min(78vw,430px); filter:drop-shadow(0 6px 28px rgba(0,0,0,.55)); animation:logoin 1.1s var(--ease) both }
+@keyframes logoin{ from{ opacity:0; transform:translateY(16px) scale(.96) } to{ opacity:1; transform:none } }
+.hero-tag{ font:600 clamp(14px,3.6vw,19px)/1.35 var(--disp); letter-spacing:.2em; text-transform:uppercase; color:var(--gold-2); text-align:center; animation:logoin 1.1s var(--ease) .15s both }
+/* en el celular el eslogan va en dos líneas parejas; en pantallas anchas, en una sola fila. El padding compensa el espacio que deja el interletrado al final y lo centra de verdad */
+.hero-tag span{ display:block; padding-left:.2em }
+.hero-tag .sep{ display:none }
+@media (min-width:640px){ .hero-tag span{ display:inline; padding-left:0 } .hero-tag .sep{ display:inline } .hero-tag{ padding-left:.2em } }
+.hero-cta{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px; animation:logoin 1.1s var(--ease) .3s both }
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 22px; min-height:48px; border-radius:99px; font-weight:650; font-size:0.9375rem; letter-spacing:.01em;
+  transition:transform .45s var(--press-out), background .2s, box-shadow .2s; user-select:none }
+.btn:active{ transform:scale(.96); transition-duration:.08s }
+.btn.gold{ background:linear-gradient(180deg,var(--gold-2),var(--gold)); color:#1b1405; box-shadow:0 8px 24px -8px rgba(216,171,78,.7), inset 0 1px 0 rgba(255,255,255,.5) }
+.btn.glass{ background:rgba(246,240,226,.1); border:1px solid var(--line); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px) }
+.btn svg{ width:18px; height:18px }
+.wave{ position:absolute; left:0; bottom:-1px; width:100%; height:46px; overflow:hidden; line-height:0 }
+.wave svg{ width:200%; height:100%; animation:wv 14s linear infinite }
+.wave svg+svg{ position:absolute; left:0; bottom:0; opacity:.45; animation-duration:22s; animation-direction:reverse }
+@keyframes wv{ to{ transform:translateX(-50%) } }
+
+/* ───────────── Cinta ───────────── */
+.ticker{ overflow:hidden; border-block:1px solid var(--line); background:rgba(246,240,226,.03); padding:11px 0 }
+.ticker div{ display:flex; width:max-content; animation:tk 34s linear infinite }
+.ticker span{ font:600 0.9375rem/1 var(--disp); letter-spacing:.22em; text-transform:uppercase; color:var(--faint); padding-right:28px; white-space:nowrap }
+.ticker span b{ color:var(--gold); font-weight:600; padding-left:28px }
+@keyframes tk{ to{ transform:translateX(-50%) } }
+
+/* ───────────── Navegación ───────────── */
+:root{ color-scheme:dark }
+/* Dentro de la app del celular, arriba hay una franja reservada para los botones del sistema (cerrar, compartir, menú).
+   En vez de dejarla vacía, el logo aparece ahí, centrado entre los botones, cuando se pasa la portada. En una compu mide 0. */
+.topband{ position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:60; background:var(--bg); display:flex; align-items:center; justify-content:center; overflow:hidden; pointer-events:none }
+.topband img{ height:26px; width:auto; opacity:0; transform:translateY(4px); transition:opacity .3s, transform .4s var(--ease) }
+body.past .topband img{ opacity:1; transform:none }
+html.has-inset .nav-logo{ display:none }
+.nav{ position:sticky; top:env(safe-area-inset-top,0px); z-index:40; background:rgba(10,26,19,.72); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:inset 0 -1px 0 rgba(246,240,226,.07) }
+/* borde de scroll: un degradado suave solo cuando el contenido pasa por debajo, en lugar de una línea dura */
+.nav::after{ content:""; position:absolute; left:0; right:0; top:100%; height:22px; pointer-events:none; opacity:0; transition:opacity .3s;
+  background:linear-gradient(rgba(10,26,19,.55),rgba(10,26,19,0)) }
+.nav.past::after{ opacity:1 }
+.nav-in{ height:var(--nav-h); display:flex; align-items:center; gap:6px; max-width:1080px; margin:0 auto; padding:0 8px 0 18px }
+.nav-logo{ height:24px; width:68px; margin-right:8px; flex:none }
+.chips{ position:relative; flex:1; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; scroll-snap-type:x proximity; padding:4px 6px; margin:0 -6px;
+  mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 22px),transparent 100%); -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 22px),transparent 100%) }
+.chips::-webkit-scrollbar{ display:none }
+.chips a{ flex:none; scroll-snap-align:center; display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border-radius:99px; font-size:0.8438rem; font-weight:600; color:var(--mut); border:1px solid transparent; white-space:nowrap;
+  transition:background .25s, color .25s, border-color .25s, transform .4s var(--press-out) }
+.chips a:active{ transform:scale(.95); transition-duration:.08s }
+.chips a.on{ background:var(--gold); color:#1b1405; border-color:var(--gold) }
+.ico{ flex:none; width:44px; height:44px; display:grid; place-items:center; border-radius:50%; transition:background .2s, transform .4s var(--press-out) }
+.ico:active{ transform:scale(.92); background:rgba(246,240,226,.1); transition-duration:.08s }
+.ico svg{ width:21px; height:21px }
+.sbar{ max-width:1080px; margin:0 auto; padding:0 18px; display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s var(--ease) }
+.sbar.open{ grid-template-rows:1fr }
+.sbar > div{ overflow:hidden }
+.sbar input{ width:100%; margin:0 0 12px; padding:13px 16px; border-radius:14px; border:1px solid var(--line); background:rgba(246,240,226,.07); color:var(--ink); font:500 1rem var(--txt); outline:none }
+.sbar input:focus{ border-color:var(--gold) }
+.sbar input::placeholder{ color:var(--faint) }
+.sbar .count{ margin:-4px 2px 12px; font-size:0.7812rem; color:var(--mut); min-height:1.2em; letter-spacing:.01em }
+
+/* ───────────── Secciones ───────────── */
+.sec{ padding:52px 0 4px; scroll-margin-top:calc(var(--nav-h) + 6px) }
+.sec-h h2{ font:700 clamp(40px,11vw,60px)/.92 var(--disp); text-transform:uppercase; letter-spacing:-.008em }   /* lo grande se aprieta */
+.sec-h .rule{ height:3px; width:64px; margin-top:12px; border-radius:3px; background:linear-gradient(90deg,var(--gold),rgba(216,171,78,0)); transform-origin:left; transform:scaleX(0); transition:transform .9s var(--ease) .2s }
+.sec-h.in .rule{ transform:scaleX(1) }
+.sec-sub{ color:var(--mut); font-size:0.875rem; margin:10px 0 20px; max-width:56ch; letter-spacing:.005em }
+.sub-h{ font:700 1.625rem/1 var(--disp); text-transform:uppercase; letter-spacing:.03em; color:var(--gold-2); margin:34px 0 4px }
+.empty{ text-align:center; color:var(--mut); padding:60px 0 20px }
+
+/* Precio: el $ va por delante, el número cuenta al aparecer */
+.pr{ font:700 1.375rem/1 var(--disp); letter-spacing:.02em; color:var(--gold-2); white-space:nowrap }
+.pr::before{ content:"$"; font-size:.62em; margin-right:2px; opacity:.75; vertical-align:.18em }
+
+.chip{ display:inline-block; font:700 0.625rem/1 var(--txt); letter-spacing:.1em; text-transform:uppercase; color:#1b1405; background:var(--gold-2); padding:5px 9px 4px; border-radius:99px; white-space:nowrap }
+.chip.dark{ background:rgba(246,240,226,.14); color:var(--ink); border:1px solid var(--line) }
+.card .chip.dark,.promo .chip.dark{ background:rgba(10,26,19,.62); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-color:rgba(246,240,226,.28) }
+/* "La insignia" y "Recomendado": un destello de luz que cruza la etiqueta una sola vez, cuando aparece o pasa por el centro de la pantalla */
+.chip.shine{ position:relative; overflow:hidden }
+.chip.shine::after{ content:""; position:absolute; inset:0; background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%); transform:translateX(-130%) }
+.chip.shine.lit::after{ animation:sweep 1.15s cubic-bezier(.3,.6,.3,1) 1 both }
+@keyframes sweep{ from{ transform:translateX(-130%) } to{ transform:translateX(130%) } }
+
+/* "Premium": etiqueta oscura con borde y letra de oro, un diamante que titila y, en la fila, un marco dorado que se enciende al llegar al centro */
+.chip.prem{ position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:5px; padding:5px 10px 4px 8px; color:#f7de9e;
+  background:linear-gradient(135deg,#2a1f08,#4b3711 55%,#2a1f08); border:1px solid rgba(241,205,124,.6); box-shadow:inset 0 1px 0 rgba(255,236,170,.28) }
+.chip.prem::before{ content:""; width:8px; height:8px; flex:none; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); background:linear-gradient(135deg,#fff6cf,#e2ac40) }
+.chip.prem::after{ content:""; position:absolute; inset:0; background:linear-gradient(105deg,transparent 35%,rgba(255,238,176,.8) 50%,transparent 65%); transform:translateX(-130%) }
+.chip.prem.lit::after{ animation:sweep 1.3s cubic-bezier(.3,.6,.3,1) 1 both }
+.chip.prem.lit::before{ animation:twinkle 1s ease-out 1 both }
+@keyframes twinkle{ 0%{ transform:scale(1) rotate(0) } 40%{ transform:scale(1.8) rotate(90deg); filter:drop-shadow(0 0 4px #ffe08a) } 100%{ transform:scale(1) rotate(180deg) } }
+.row.prem{ box-shadow:inset 0 0 0 1px rgba(241,205,124,.2) }
+.row.prem.lit{ animation:premGlow 1.8s ease-out 1 both }
+@keyframes premGlow{ 0%{ box-shadow:inset 0 0 0 1px rgba(241,205,124,.2), 0 0 0 0 rgba(241,205,124,0) } 35%{ box-shadow:inset 0 0 0 1px rgba(241,205,124,.7), 0 0 24px -6px rgba(241,205,124,.5) } 100%{ box-shadow:inset 0 0 0 1px rgba(241,205,124,.2), 0 0 0 0 rgba(241,205,124,0) } }
+.row.prem .pr{ background:linear-gradient(180deg,#fff2c2,#e0a93c); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
+
+/* ───────────── Promos (carrusel) ───────────── */
+.carousel{ position:relative; display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:14px 18px 26px; margin:0 -18px; overscroll-behavior-x:contain }
+.carousel::-webkit-scrollbar{ display:none }
+.promo{ position:relative; flex:0 0 78%; max-width:340px; min-height:392px; border-radius:var(--r); overflow:hidden; scroll-snap-align:center; isolation:isolate; display:flex; flex-direction:column; justify-content:flex-end;
+  transform:scale(calc(.9 + .1 * var(--k,1))); opacity:calc(.55 + .45 * var(--k,1)); will-change:transform,opacity;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.8), inset 0 0 0 1px var(--line); background:var(--bg-3) }
+.promo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transform:scale(1.06); transition:transform 1.2s var(--ease) }
+.promo.seen img{ transform:scale(1) }
+.promo::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,rgba(10,26,19,.1) 0,rgba(10,26,19,.55) 38%,rgba(10,26,19,.96) 86%) }
+.promo.feat{ box-shadow:0 22px 48px -16px rgba(216,171,78,.55), inset 0 0 0 1.5px var(--gold) }
+.promo.feat::before{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:inherit; padding:2px;
+  background:conic-gradient(from var(--a,0deg),transparent 0 70%,rgba(241,205,124,.95) 85%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:spin 9s linear infinite }
+@property --a{ syntax:'<angle>'; initial-value:0deg; inherits:false }
+@keyframes spin{ to{ --a:360deg } }
+.p-top{ position:absolute; top:14px; left:14px; right:14px; display:flex; gap:6px; flex-wrap:wrap }
+.p-body{ padding:0 18px 18px }
+.promo h3{ font:700 1.75rem/.98 var(--disp); text-transform:uppercase; letter-spacing:0 }
+.promo p{ color:rgba(246,240,226,.9); font-weight:450; letter-spacing:.006em; font-size:0.8438rem; margin:8px 0 12px; line-height:1.4; text-shadow:0 1px 10px rgba(0,0,0,.45) }
+.p-price{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap }
+.p-price .pr{ font-size:2.5rem }
+.was{ color:rgba(246,240,226,.74); font-weight:500; font-size:0.8125rem; letter-spacing:.006em }
+.was s{ text-decoration-thickness:1px }
+.save{ display:inline-flex; margin-top:10px; padding:6px 11px; border-radius:99px; font-size:0.7812rem; font-weight:700; color:#0d2a1b; background:#6fe3a0; opacity:0; transform:scale(.7) }
+/* el ahorro "aparece" una vez, con impulso, cuando la promo entra en foco; no hay animaciones en bucle que cansen la vista */
+.promo.seen .save{ animation:pop .7s var(--press-out) .45s both }
+@keyframes pop{ from{ opacity:0; transform:scale(.7) } to{ opacity:1; transform:scale(1) } }
+.dots{ display:flex; justify-content:center; gap:7px; margin-top:-8px }
+.dots button{ width:16px; height:30px; padding:11px 4.5px; border-radius:99px; background:var(--line); background-clip:content-box; transition:width .35s var(--ease), background .3s }
+.dots button.on{ width:32px; background:var(--gold); background-clip:content-box }
+
+/* ───────────── Destacados ───────────── */
+.spot{ display:grid; grid-template-columns:1fr 1fr; gap:12px }
+.card{ position:relative; border-radius:var(--r); overflow:hidden; isolation:isolate; display:flex; flex-direction:column; justify-content:flex-end; aspect-ratio:4/5; text-align:left; width:100%;
+  box-shadow:0 14px 34px -18px rgba(0,0,0,.85), inset 0 0 0 1px var(--line); background:var(--bg-3); transition:transform .45s var(--press-out) }
+.card:active{ transform:scale(.97); transition-duration:.08s }
+.card.wide{ grid-column:1 / -1; aspect-ratio:16/11 }
+.card img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transform:scale(1.14); transition:transform 1.4s var(--ease) }
+.card.in img{ transform:scale(1) }
+.card::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,transparent 35%,rgba(10,26,19,.9) 100%) }
+.card .chip{ position:absolute; top:12px; left:12px }
+.card .c-body{ padding:0 14px 14px }
+.card h3{ font:700 1.5625rem/.98 var(--disp); text-transform:uppercase; letter-spacing:0; text-shadow:0 1px 12px rgba(0,0,0,.4) }
+.card.wide h3{ font-size:2.125rem }
+.card .pr{ display:block; margin-top:8px; font-size:1.5rem }
+.card .plus{ position:absolute; right:12px; bottom:12px; width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:rgba(246,240,226,.16); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-size:1.25rem; font-weight:500; line-height:1 }
+
+/* ───────────── Cervezas artesanales ───────────── */
+.beers{ display:grid; gap:14px }
+.beer{ position:relative; display:grid; grid-template-columns:38% 1fr; border-radius:var(--r); overflow:hidden; text-align:left; width:100%; background:linear-gradient(160deg,var(--bg-3),var(--bg-2));
+  box-shadow:inset 0 0 0 1px var(--line), 0 14px 30px -20px #000; transition:transform .45s var(--press-out) }
+.beer:active{ transform:scale(.98); transition-duration:.08s }
+.beer .ph{ position:relative; overflow:hidden; min-height:180px }
+.beer .ph img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.15); transition:transform 1.3s var(--ease) }
+.beer.in .ph img{ transform:scale(1) }
+.beer .bd{ padding:16px 16px 14px; display:flex; flex-direction:column; gap:6px }
+.beer .t{ display:flex; justify-content:space-between; align-items:baseline; gap:10px }
+.beer h3{ font:700 1.75rem/1 var(--disp); text-transform:uppercase; letter-spacing:0 }
+.beer .meta{ font-size:0.75rem; color:var(--faint); letter-spacing:.02em }
+.meter{ display:flex; align-items:center; gap:4px; margin-top:2px }
+.meter span{ font-size:0.7188rem; color:var(--mut); margin-right:6px; letter-spacing:.02em }
+.meter i{ width:22px; height:7px; border-radius:7px; background:var(--line); position:relative; overflow:hidden }
+.meter i::after{ content:""; position:absolute; inset:0; background:linear-gradient(90deg,var(--gold),var(--gold-2)); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease) calc(.35s + var(--n) * 110ms) }
+.beer.in .meter i.on::after{ transform:scaleX(1) }
+.beer p{ color:var(--mut); font-size:0.8438rem; line-height:1.4 }
+.pair{ margin-top:auto; padding-top:8px; font-size:0.7812rem; color:var(--gold-2); border-top:1px dashed var(--line) }
+.pair b{ font-weight:700 }
+
+/* ───────────── Listas ───────────── */
+.banner{ position:relative; height:200px; border-radius:var(--r); overflow:hidden; margin:2px 0 14px; box-shadow:inset 0 0 0 1px var(--line), 0 14px 30px -20px #000; isolation:isolate }
+.banner img{ position:absolute; left:0; top:-12%; width:100%; height:124%; object-fit:cover; z-index:-2; will-change:transform }
+.banner::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(0deg,rgba(10,26,19,.82) 0,transparent 55%) }
+.banner span{ position:absolute; left:16px; bottom:12px; font:700 0.9375rem/1 var(--disp); letter-spacing:.18em; text-transform:uppercase; color:var(--gold-2) }
+.list{ display:block }
+.row{ position:relative; display:grid; grid-template-columns:1fr auto; gap:4px 16px; align-items:start; padding:15px 12px; margin:0 -12px; border-radius:14px; transition:background .2s, transform .12s ease-out }
+.row::after{ content:""; position:absolute; left:12px; right:12px; bottom:0; height:1px; background:var(--line) }
+.row:last-child::after{ display:none }
+.row.tap{ cursor:pointer }
+.row.tap:active{ background:rgba(246,240,226,.07); transform:scale(.99); transition-duration:.08s }
+.row-n{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px }
+.nm{ font-weight:650; font-size:1.0312rem; letter-spacing:-.005em }
+.star{ color:var(--gold); font-style:normal; margin-left:4px; font-size:0.875rem }
+.ml{ font-style:normal; font-size:0.75rem; color:var(--faint); font-weight:600; letter-spacing:.06em }
+.row p{ grid-column:1; color:var(--mut); font-size:0.8438rem; line-height:1.45; letter-spacing:.006em; margin-top:3px; max-width:52ch }
+.row .pr{ grid-column:2; grid-row:1 / span 2; font-size:1.4375rem; padding-top:1px; text-align:right }
+.row.feat{ background:linear-gradient(90deg,rgba(216,171,78,.16),rgba(216,171,78,0) 80%); box-shadow:inset 3px 0 0 var(--gold) }
+.cols2{ display:grid; gap:0 36px }
+.note{ color:var(--mut); font-size:0.8438rem; margin-top:14px; padding:12px 14px; border-radius:14px; background:rgba(246,240,226,.05); border:1px dashed var(--line) }
+
+/* Fotos para compartir */
+.duo{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px }
+.duo .card{ aspect-ratio:3/4 }
+.duo .card .pr{ font-size:1.375rem }
+
+/* ───────────── Selector (pizzas y tragos) ───────────── */
+.seg{ position:relative; display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; padding:4px; border-radius:99px; background:rgba(246,240,226,.08); border:1px solid var(--line); margin:4px 0 8px; max-width:100% }
+.seg button{ position:relative; z-index:1; padding:10px 20px; font-size:0.875rem; font-weight:650; border-radius:99px; color:var(--mut); transition:color .25s; white-space:nowrap }
+.seg button.on{ color:#1b1405 }
+.seg .thumb{ position:absolute; z-index:0; top:4px; bottom:4px; left:4px; border-radius:99px; background:linear-gradient(180deg,var(--gold-2),var(--gold)); box-shadow:0 6px 16px -6px rgba(216,171,78,.7);
+  transition:transform .45s cubic-bezier(.3,1.35,.5,1), width .45s cubic-bezier(.3,1.35,.5,1) }
+.tabs{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; margin:6px -18px 6px; padding:4px 18px }
+.tabs::-webkit-scrollbar{ display:none }
+.tabs button{ flex:none; padding:10px 18px; border-radius:99px; font-size:0.875rem; font-weight:650; color:var(--mut); border:1px solid var(--line); transition:background .25s, color .25s, transform .12s ease-out }
+.tabs button:active{ transform:scale(.95) }
+.tabs button.on{ background:var(--gold); color:#1b1405; border-color:var(--gold) }
+.panel{ display:none }
+.panel.on, body.searching .panel{ display:block }
+.panel.on .row{ animation:swap .5s var(--ease) both; animation-delay:calc(var(--i,0) * 55ms) }
+@keyframes swap{ from{ opacity:0; transform:translateY(12px) } to{ opacity:1; transform:none } }
+.fam{ display:none; font:700 1.5rem/1 var(--disp); text-transform:uppercase; letter-spacing:.04em; color:var(--gold-2); margin:26px 0 2px }
+body.searching .fam{ display:block }
+
+/* ───────────── Pie ───────────── */
+.foot{ position:relative; margin-top:70px; isolation:isolate; overflow:hidden; border-top:1px solid var(--line) }
+.foot-bg{ position:absolute; inset:0; z-index:-2 }
+.foot-bg img{ width:100%; height:100%; object-fit:cover; object-position:50% 30% }
+.foot::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg,var(--bg) 0,rgba(10,26,19,.82) 45%,rgba(10,26,19,.94) 100%) }
+.foot-in{ padding:56px 18px calc(40px + env(safe-area-inset-bottom)); display:grid; gap:26px }
+.foot h2{ font:700 clamp(40px,11vw,60px)/.92 var(--disp); text-transform:uppercase; letter-spacing:-.008em }
+/* los tres botones, uno al lado del otro y del mismo ancho */
+.cta{ display:flex; gap:8px; flex-wrap:nowrap }
+.cta .btn{ flex:1 1 0; min-width:0; padding:14px 8px; gap:6px; font-size:0.875rem; white-space:nowrap }
+.cta .btn svg{ width:16px; height:16px; flex:none }
+
+/* ───────────── Hoja de detalle ───────────── */
+.scrim{ position:fixed; inset:0; z-index:90; background:rgba(3,10,7,.66); opacity:0; backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px) }
+.sheet{ position:fixed; z-index:100; left:0; right:0; bottom:0; margin:0 auto; max-width:560px; max-height:90svh; display:flex; flex-direction:column; overflow:hidden;
+  background:rgba(14,36,25,.94); backdrop-filter:blur(26px) saturate(170%); -webkit-backdrop-filter:blur(26px) saturate(170%);
+  border-radius:28px 28px 0 0; border:1px solid var(--line); border-bottom:0; box-shadow:0 -24px 60px -10px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.14);
+  transform:translate3d(0,100%,0); will-change:transform }
+.sheet-top{ position:relative; touch-action:none; cursor:grab; flex:none }
+.sheet-top:active{ cursor:grabbing }
+.grab{ position:absolute; z-index:3; top:9px; left:50%; width:42px; height:5px; margin-left:-21px; border-radius:5px; background:rgba(255,255,255,.55) }
+.s-img{ aspect-ratio:4/3; max-height:44svh; width:100%; background:var(--bg-3); overflow:hidden }
+.s-img img{ width:100%; height:100%; object-fit:cover }
+.sheet.noimg .s-img{ display:none }
+.sheet.noimg .sheet-top{ height:34px }
+.x{ position:absolute; z-index:4; top:12px; right:12px; width:36px; height:36px; border-radius:50%; background:rgba(10,26,19,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); font-size:1.375rem; line-height:1; display:grid; place-items:center; transition:transform .12s ease-out }
+.x:active{ transform:scale(.9) }
+.s-body{ padding:20px 22px calc(26px + env(safe-area-inset-bottom)); overflow:auto; overscroll-behavior:contain }
+.s-body .chips-r{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px }
+.s-body h3{ font:700 2.375rem/.95 var(--disp); text-transform:uppercase; letter-spacing:-.004em }
+.s-body .pr{ font-size:2.125rem; margin:12px 0 10px; display:block }
+.s-body p{ color:var(--mut); font-size:0.9375rem; line-height:1.5 }
+.s-body .pair{ margin-top:16px; padding-top:14px; font-size:0.875rem }
+
+/* ───────────── Pantallas grandes ───────────── */
+@media (min-width:760px){
+  .hero-in{ padding-bottom:120px }
+  .cols2{ grid-template-columns:1fr 1fr }
+  .beers{ grid-template-columns:1fr 1fr }
+  .banner{ height:260px }
+}
+@media (min-width:900px){
+  .carousel{ display:grid; grid-template-columns:repeat(3,1fr); overflow:visible; padding:14px 0 10px; margin:0; scroll-snap-type:none }
+  .promo{ flex:none; max-width:none; transform:none !important; opacity:1 !important }
+  .dots{ display:none }
+  .spot{ grid-template-columns:repeat(5,1fr) }
+  .card.wide{ grid-column:auto; aspect-ratio:4/5 }
+  .card.wide h3{ font-size:1.5625rem }
+  .cta{ max-width:560px }
+}
+
+/* ───────────── Accesibilidad ───────────── */
+/* Menos movimiento no es cero respuesta: se quitan los desplazamientos y los bucles, y quedan fundidos cortos que ayudan a entender */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation:none !important; scroll-behavior:auto !important }
+  .wave svg{ animation:none !important }
+  .ticker div{ animation:tk 70s linear infinite !important }   /* la cinta sigue corriendo, más lenta: es una franja chica que se desplaza en horizontal */
+  .hero-bg img,.promo img,.card img,.beer .ph img,.banner img{ transform:none !important }
+  .rv{ transform:none }
+  .rv.in{ transition:opacity .25s linear 0s !important }
+  .sec-h .rule{ transform:scaleX(1); transition:none }
+  .meter i.on::after{ transform:scaleX(1); transition:none }
+  .save{ opacity:1; transform:none }
+  .promo,.card,.beer,.btn,.chips a,.ico{ transition:opacity .2s linear, background .2s, color .2s !important }
+  .promo{ transform:none !important }
+  .panel.on .row{ animation:none !important }
+  .seg .thumb{ transition:none }
+}
+@media (prefers-reduced-transparency:reduce){
+  .nav,.sheet,.open-pill,.btn.glass{ backdrop-filter:none; -webkit-backdrop-filter:none; background:#0e2419 }
+}
+@media (prefers-contrast:more){
+  :root{ --mut:rgba(246,240,226,.92); --line:rgba(246,240,226,.4) }
+}
+</style>
+</head>
+<body>
+<noscript><p style="padding:40px 20px;text-align:center">Para ver la carta de Brunder activá JavaScript en tu navegador.</p></noscript>
+<div class="topband" aria-hidden="true"><img src="img/logo_white.png" alt=""></div>
+
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="img/golden.jpg" alt=""></div>
+  <div class="hero-shade"></div>
+  <div class="hero-in">
+    <div class="open-pill" id="openPill"><span class="dot"></span><span id="openTxt">Abierto de 21 a 04 hs</span></div>
+    <img class="hero-logo" src="img/logo_white.png" alt="Brunder · Cerveza Artesanal">
+    <p class="hero-tag"><span>Buenas birras · Buena comida</span><span class="sep"> · </span><span>Mejores momentos</span></p>
+    <div class="hero-cta">
+      <a class="btn gold" href="#promos" data-go>Ver promos</a>
+      <a class="btn glass" href="#destacados" data-go>Ver la carta</a>
+    </div>
+  </div>
+  <div class="wave" aria-hidden="true">
+    <svg viewBox="0 0 1800 80" preserveAspectRatio="none"><path fill="#0a1a13" d="M0 44 Q225 4 450 44 T900 44 T1350 44 T1800 44 V80 H0 Z"/></svg>
+    <svg viewBox="0 0 1800 80" preserveAspectRatio="none"><path fill="#0a1a13" d="M0 30 Q225 70 450 30 T900 30 T1350 30 T1800 30 V80 H0 Z"/></svg>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><div id="ticker"></div></div>
+
+<nav class="nav" id="nav" aria-label="Secciones de la carta">
+  <div class="nav-in">
+    <a href="#top" data-go aria-label="Volver arriba"><img class="nav-logo" src="img/logo_white.png" alt="Brunder"></a>
+    <div class="chips" id="chips">
+      <a href="#promos" data-go>Promos</a>
+      <a href="#destacados" data-go>Especialidades</a>
+      <a href="#cervezas" data-go>Cervezas</a>
+      <a href="#compartir" data-go>Para compartir</a>
+      <a href="#hamburguesas" data-go>Hamburguesas</a>
+      <a href="#entrepanes" data-go>Entre panes</a>
+      <a href="#pizzas" data-go>Pizzas</a>
+      <a href="#tragos" data-go>Tragos</a>
+      <a href="#envasadas" data-go>Envasadas</a>
+      <a href="#vinos" data-go>Vinos</a>
+      <a href="#sinalcohol" data-go>Sin alcohol</a>
+    </div>
+    <button class="ico" id="sbtn" aria-label="Buscar en la carta" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </button>
+  </div>
+  <div class="sbar" id="sbar"><div><input id="q" type="search" placeholder="Buscar: hamburguesa, IPA, fernet…" autocomplete="off" enterkeyhint="search" aria-label="Buscar en la carta"><p class="count" id="count" role="status" aria-live="polite"></p></div></div>
+</nav>
+
+<main class="wrap" id="main">
+
+  <section class="sec" id="promos">
+    <div class="sec-h rv"><h2>Promociones</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Pinta + comida: la mejor forma de pedir. Deslizá y elegí la tuya.</p>
+    <div class="carousel rv" id="carousel"></div>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <section class="sec" id="destacados">
+    <div class="sec-h rv"><h2>Las especialidades de la casa</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Lo que no te podés ir sin probar. Tocá una para verla de cerca.</p>
+    <div class="spot" id="spot"></div>
+  </section>
+
+  <section class="sec" id="cervezas">
+    <div class="sec-h rv"><h2>Cervezas artesanales</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Todas en pinta de 500 ml. Elegí por estilo y fijate con qué combina mejor.</p>
+    <div class="beers" id="beers"></div>
+  </section>
+
+  <section class="sec" id="compartir">
+    <div class="sec-h rv"><h2>Para compartir</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Lo que se pide al centro de la mesa. Siempre acompañado de una buena pinta.</p>
+    <div class="duo" id="duo"></div>
+    <div class="list" id="fritas"></div>
+  </section>
+
+  <section class="sec" id="hamburguesas">
+    <div class="sec-h rv"><h2>Hamburguesas</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Medallón de 220 g en pan artesanal.</p>
+    <div class="banner rv"><img data-px src="img/hamburguesa.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 36%"><span>Hechas a la parrilla</span></div>
+    <div class="list cols2" id="burgers"></div>
+    <p class="note rv" id="burgerNote"></p>
+  </section>
+
+  <section class="sec" id="entrepanes">
+    <div class="sec-h rv"><h2>Entre panes</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Pachatas y lomos, bien cargados, en pan artesanal.</p>
+    <h3 class="sub-h rv">Pachatas</h3>
+    <div class="banner rv"><img data-px src="img/pachata.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 34%"><span>40 cm de sabor</span></div>
+    <div class="list cols2" id="pachatas"></div>
+    <h3 class="sub-h rv">Lomos</h3>
+    <p class="sec-sub rv" style="margin-top:4px">Bife de ternera en pan de lomo, con todo lo que va.</p>
+    <div class="list cols2" id="lomos"></div>
+  </section>
+
+  <section class="sec" id="pizzas">
+    <div class="sec-h rv"><h2>Pizzas y pizzetas</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Masa artesanal y mozzarella hasta el borde. Elegí el tamaño y los precios cambian solos.</p>
+    <div class="duo" id="pzphotos" style="margin-bottom:14px"></div>
+    <div class="seg rv" id="pzseg" role="tablist" aria-label="Tamaño">
+      <span class="thumb" id="pzthumb"></span>
+      <button role="tab" data-k="pza" class="on">Pizza · 8 porciones</button>
+      <button role="tab" data-k="pzta">Pizzeta · 1 persona</button>
+    </div>
+    <div class="list cols2" id="pizzas-list"></div>
+  </section>
+
+  <section class="sec" id="tragos">
+    <div class="sec-h rv"><h2>Tragos</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Servidos en vaso de 500 ml. El Copón de Fernet, de 1.000 ml.</p>
+    <div class="tabs rv" id="tragoTabs" role="tablist"></div>
+    <div id="tragoPanels"></div>
+  </section>
+
+  <section class="sec" id="envasadas">
+    <div class="sec-h rv"><h2>Cervezas envasadas</h2><div class="rule"></div></div>
+    <div class="list cols2" id="envas" style="margin-top:18px"></div>
+  </section>
+
+  <section class="sec" id="vinos">
+    <div class="sec-h rv"><h2>Vinos</h2><div class="rule"></div></div>
+    <p class="sec-sub rv">Botella. Pedí la que más te guste para la picada.</p>
+    <div class="banner rv" style="height:140px"><img data-px src="img/vinos.jpg" alt="" loading="lazy" decoding="async"><span>Para la picada</span></div>
+    <div class="list cols2" id="vinosList"></div>
+  </section>
+
+  <section class="sec" id="sinalcohol">
+    <div class="sec-h rv"><h2>Sin alcohol</h2><div class="rule"></div></div>
+    <div class="list cols2" id="sinAlc" style="margin-top:18px"></div>
+  </section>
+
+  <p class="empty" id="empty" hidden>No encontramos nada con esa búsqueda. Probá con otra palabra.</p>
+</main>
+
+<footer class="foot" id="contacto">
+  <div class="foot-bg"><img src="img/fachada.jpg" alt="" loading="lazy" decoding="async"></div>
+  <div class="wrap foot-in">
+    <h2>Te esperamos</h2>
+    <div class="cta">
+      <a class="btn gold" href="tel:+542645855023"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Llamar</a>
+      <a class="btn glass" href="https://wa.me/5492645855023" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn glass" href="https://maps.app.goo.gl/WXDzmFRRKFVxtKYg9" target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle" hidden>
+  <div class="sheet-top" id="sheetTop">
+    <div class="grab"></div>
+    <button class="x" id="sClose" aria-label="Cerrar">×</button>
+    <div class="s-img"><img id="sImg" alt=""></div>
+  </div>
+  <div class="s-body" id="sBody"></div>
+</section>
+
+<script>
+/* ═══════════════════════ Datos ═══════════════════════
+   Los precios se escriben como llave-llave P: nombre exacto en Fudo, y se reemplazan por el precio actual al actualizar la carta. */
+const PROMOS=[
+ {n:"2 Pintas + Pizza Mozzarella", w:"Para 2", d:"Dos pintas (500 ml) + pizza de mozzarella de 8 porciones.", p:"{{P:2 Pintas + Pizza Mozzarella}}", a:"{{SUM:2*Golden Ale;Pizza Mozzarella}}", s:"{{DIF:2 Pintas + Pizza Mozzarella|2*Golden Ale;Pizza Mozzarella}}", img:"pizza_mozza.jpg", pos:"50% 60%", feat:1, tag:"Recomendado"},
+ {n:"2 Pintas + Fritas Clásicas", w:"Para 2", d:"Dos pintas (500 ml) de nuestra cerveza artesanal + porción de fritas clásicas.", p:"{{P:2 Pintas + Fritas Clasicas}}", a:"{{SUM:2*Golden Ale;Fritas Clásicas}}", s:"{{DIF:2 Pintas + Fritas Clasicas|2*Golden Ale;Fritas Clásicas}}", img:"golden.jpg", pos:"50% 60%"},
+ {n:"Pinta + Hamburguesa", w:"Para 1", d:"Hamburguesa jugosa + una pinta (500 ml) bien fría.", p:"{{P:Pinta + Hamburguesa}}", a:"{{SUM:Hamburguesa Clasica;Golden Ale}}", s:"{{DIF:Pinta + Hamburguesa|Hamburguesa Clasica;Golden Ale}}", img:"hamburguesa.jpg", pos:"50% 30%"},
+ {n:"Brahma + Fritas Clásicas", w:"Para 1", d:"Una Brahma bien fría (970 cc) + porción de fritas clásicas.", p:"{{P:Brahma + Fritas Clasicas}}", a:"{{SUM:Andes/Brahma;Fritas Clásicas}}", s:"{{DIF:Brahma + Fritas Clasicas|Andes/Brahma;Fritas Clásicas}}", img:"cheddar.jpg", pos:"50% 55%"},
+ {n:"Brahma + Pizza Mozzarella", w:"Para 2", d:"Una Brahma helada (970 cc) + pizza de mozzarella con queso bien derretido.", p:"{{P:Brahma + Pizza Mozzarella}}", a:"{{SUM:Andes/Brahma;Pizza Mozzarella}}", s:"{{DIF:Brahma + Pizza Mozzarella|Andes/Brahma;Pizza Mozzarella}}", img:"pizza_pepperoni.jpg", pos:"50% 55%"},
+ {n:"Mozzarella + Fritas Clásicas", w:"Para 2", d:"Pizza de mozzarella con abundante queso fundido + porción de fritas clásicas.", p:"{{P:Mozzarella + Fritas Clasicas}}", a:"{{SUM:Pizza Mozzarella;Fritas Clásicas}}", s:"{{DIF:Mozzarella + Fritas Clasicas|Pizza Mozzarella;Fritas Clásicas}}", img:"pizza_especial.jpg", pos:"50% 55%"},
+ {n:"2 Hamburguesas + Fritas Clásicas", w:"Para 2", d:"Dos hamburguesas jugosas + porción de fritas clásicas bien crocantes.", p:"{{P:2 Hamburguesas + Fritas Clasicas}}", a:"{{SUM:2*Hamburguesa Clasica;Fritas Clásicas}}", s:"{{DIF:2 Hamburguesas + Fritas Clasicas|2*Hamburguesa Clasica;Fritas Clásicas}}", img:"hamburguesa.jpg", pos:"50% 62%"},
+ {n:"2 Pachatas Ternera + Fritas Clásicas", w:"Para 2", d:"Dos generosas pachatas de ternera + porción de fritas clásicas.", p:"{{P:2 Pachatas Ternera + Fritas Clasicas}}", a:"{{SUM:2*Pachata Ternera;Fritas Clásicas}}", s:"{{DIF:2 Pachatas Ternera + Fritas Clasicas|2*Pachata Ternera;Fritas Clásicas}}", img:"pachata.jpg", pos:"50% 40%"},
+ {n:"2 Pachatas de Cerdo con Fritas", w:"Para 2", d:"Dos pachatas de cerdo bien completas + porción de fritas clásicas con mayonesa casera.", p:"{{P:2 Pachatas de Cerdo con Fritas}}", a:"{{SUM:2*Pachata Cerdo Especial;Fritas Clásicas}}", s:"{{DIF:2 Pachatas de Cerdo con Fritas|2*Pachata Cerdo Especial;Fritas Clásicas}}", img:"pachata.jpg", pos:"50% 70%"}
+];
+
+const ESP=[
+ {n:"Hamburguesa Brunder", tag:"La insignia", wide:1, img:"hamburguesa.jpg", pos:"50% 22%", p:"{{P:Hamburguesa Brunder}}", d:"Medallón de 220 g, panceta ahumada, cebolla caramelizada, mozzarella y mayonesa de ajo.", pair:"Golden Ale"},
+ {n:"Pachata Brunder", tag:"40 cm de sabor", img:"pachata.jpg", pos:"50% 38%", p:"{{P:Pachata Brunder}}", d:"Bifes de ternera, panceta ahumada, cebolla caramelizada, mozzarella y huevo omelette en pan artesanal.", pair:"Scottish"},
+ {n:"Fritas Brunder", tag:"Para compartir", img:"cheddar.jpg", pos:"50% 55%", p:"{{P:Fritas con Cheddar y Panceta}}", d:"Fritas bañadas en cheddar fundido y panceta ahumada. Porción para dos.", pair:"Una pinta bien fría"},
+ {n:"Pinta Porter", tag:"Nuestro orgullo", dark:1, img:"porter.jpg", pos:"50% 34%", p:"{{P:Porter}}", d:"Oscura, de cuerpo medio, con notas tostadas de café y chocolate. Pinta de 500 ml.", pair:"Lomos y picada"},
+ {n:"Copón de Fernet", tag:"1.000 ml", dark:1, img:"fernet.jpg", pos:"50% 62%", p:"{{P:Copon Fernet}}", d:"1.000 ml, con hielo y Coca-Cola. Para compartir entre amigos.", pair:"Picada Brunder"}
+];
+
+const BEERS=[
+ {n:"Golden Ale", img:"golden.jpg", pos:"50% 60%", p:"{{P:Golden Ale}}", am:2, d:"Rubia, dorada y fácil de tomar. Amargor justo y final liviano.", pair:"Hamburguesa Clásica"},
+ {n:"Scottish", img:"scottish.jpg", pos:"50% 30%", p:"{{P:Scotish}}", am:1, d:"Ámbar y maltosa, con dulzor a caramelo. Cuerpo suave y redonda.", pair:"Pachatas y pizzas"},
+ {n:"American IPA", img:"golden.jpg", pos:"50% 78%", zoom:1.15, p:"{{P:American IPA}}", am:5, d:"Dorada, de amargor intenso, con notas cítricas y de frutas tropicales.", pair:"Mac Brunder"},
+ {n:"Porter", star:1, img:"porter.jpg", pos:"50% 34%", p:"{{P:Porter}}", am:2, d:"Oscura y con cuerpo. Notas tostadas de café y chocolate.", pair:"Lomos y picada"}
+];
+
+const COMPARTIR_FOTOS=[
+ {n:"Picada Brunder", tag:"Ideal para compartir", img:"picada.jpg", pos:"40% 50%", p:"{{P:Picada Fiambre}}", d:"Salame, queso tybo y jamón cocido (180 g de cada uno), aceitunas, pan de campo, mayonesa casera y barbacoa. Para 2 o 3 personas.", pair:"Una Golden Ale"},
+ {n:"Fritas Power", tag:"Nuevo", dark:1, img:"power.jpg", pos:"50% 78%", p:"{{P:Fritas Power}}", d:"Fritas, tiras de lomo, bacon, huevo frito y mayonesa de la casa. Un plato entero para compartir entre dos.", pair:"American IPA"}
+];
+const FRITAS=[
+ {n:"Fritas Brunder", star:1, feat:1, p:"{{P:Fritas con Cheddar y Panceta}}", d:"Cheddar fundido y panceta ahumada."},
+ {n:"Fritas Gratinadas", p:"{{P:Fritas Gratinadas con Mozzarella y Verdeo}}", d:"Con mozzarella derretida y verdeo."},
+ {n:"Fritas Caballo", p:"{{P:Fritas Caballo}}", d:"Fritas clásicas con 2 huevos fritos."},
+ {n:"Fritas Bravas", p:"{{P:Fritas Bravas}}", d:"Fritas clásicas con salsa picante."},
+ {n:"Fritas Clásicas", p:"{{P:Fritas Clásicas}}", d:"Doradas, crocantes, con mayonesa casera."}
+];
+
+const BURGERS=[
+ {n:"Brunder", star:1, feat:1, tag:"La insignia", p:"{{P:Hamburguesa Brunder}}", d:"Panceta ahumada, cebolla caramelizada, mozzarella y mayonesa de ajo."},
+ {n:"Argentina", tag:"Premium", dark:1, p:"{{P:Burger Argentina}}", d:"Medallón de carne, tomate, provoleta, chimichurri y mayonesa de la casa."},
+ {n:"BBQ Burger", p:"{{P:BBQ Burger}}", d:"Cheddar, bacon, cebolla crispy y salsa BBQ."},
+ {n:"Especial", p:"{{P:Hamburguesa Especial}}", d:"Jamón cocido, mozzarella derretida y huevo omelette, con mostaza y barbacoa."},
+ {n:"Mac Brunder", p:"{{P:Mac Brunder}}", d:"Lechuga, cheddar, cebolla, pepinos y salsa Big Mac."},
+ {n:"Clásica", p:"{{P:Hamburguesa Clasica}}", d:"Lechuga, tomate, mostaza y barbacoa. La de toda la vida."},
+ {n:"Cheese Burger", p:"{{P:Chesse Burger}}", d:"Cheddar fundido, tomate y mayonesa casera."},
+ {n:"Vegetariana", p:"{{P:Hamburguesa Vegetariana}}", d:"Medallón a base de vegetales, bien sazonado y jugoso."}
+];
+const PACHATAS=[
+ {n:"Brunder", star:1, feat:1, tag:"La insignia", p:"{{P:Pachata Brunder}}", d:"Bifes de ternera, panceta ahumada, cebolla caramelizada, mozzarella y huevo omelette."},
+ {n:"Deluxe", tag:"Premium", dark:1, p:"{{P:Pachata Deluxe}}", d:"Lomo de ternera, tomate, cheddar, bacon, cebolla crispy, BBQ y mayonesa de la casa."},
+ {n:"Especial", p:"{{P:Pachata Especial}}", d:"Bifes de ternera, jamón cocido, mozzarella derretida, morrón fresco y huevo omelette."},
+ {n:"Ternera", p:"{{P:Pachata Ternera}}", d:"Bifes de ternera, jamón cocido, queso tybo, lechuga y tomate. La de siempre."},
+ {n:"Cerdo Especial", p:"{{P:Pachata Cerdo Especial}}", d:"Carne de cerdo tierna, jamón cocido, mozzarella, morrón fresco y huevo omelette."}
+];
+const LOMOS=[
+ {n:"Lomo Brunder", star:1, feat:1, tag:"La insignia", p:"{{P:Lomo Brunder}}", d:"Bife de ternera, panceta ahumada, mozzarella, huevo, tomate, lechuga, morrón, cebolla caramelizada y aceitunas."},
+ {n:"Lomo Deluxe", tag:"Premium", dark:1, p:"{{P:Lomo Deluxe}}", d:"Lomo de ternera, tomate, cheddar, bacon, cebolla crispy, BBQ y mayonesa de la casa."},
+ {n:"Lomo Especial", p:"{{P:Lomo Especial}}", d:"Bife de ternera, jamón cocido, mozzarella, huevo, tomate, lechuga, morrón y aceitunas."},
+ {n:"Lomo Ternera", p:"{{P:Lomo Ternera}}", d:"Bife de ternera, jamón cocido, queso tybo, huevo, tomate, lechuga y mayonesa casera."}
+];
+
+const PIZZAS=[
+ {n:"Brunder", star:1, feat:1, tag:"La insignia", pta:"{{P:Pizzeta Brunder}}", pza:"{{P:Pizza Brunder}}", d:"Panceta ahumada y huevo omelette sobre mozzarella derretida."},
+ {n:"Lomo al verdeo", tag:"Premium", dark:1, pta:"{{P:Pizzeta Lomo al verdeo}}", pza:"{{P:Pizza Lomo al verdeo}}", d:"Salsa de tomates, mozzarella, tiras de lomo, verdeo, parmesano y aceitunas."},
+ {n:"Pepperoni", pta:"{{P:Pizzeta Peperoni}}", pza:"{{P:Pizza Pepperoni}}", d:"Salsa de tomates, mozzarella, rodajas de salame y aceitunas."},
+ {n:"Especial", pta:"{{P:Pizzeta Especial}}", pza:"{{P:Pizza Especial}}", d:"Jamón cocido y morrón fresco sobre mozzarella."},
+ {n:"Calabresa", pta:"{{P:Pizzeta Calabresa}}", pza:"{{P:Pizza Calabresa}}", d:"Rodajas de calabresa, con su toque picante."},
+ {n:"Porky", pta:"{{P:Pizzeta Porky}}", pza:"{{P:Pizza Porky}}", d:"Salsa de tomates, mozzarella, bondiolita de cerdo y BBQ."},
+ {n:"Napolitana", pta:"{{P:Pizzeta Napolitana}}", pza:"{{P:Pizza Napolitana}}", d:"Rodajas de tomate fresco, aceitunas y orégano."},
+ {n:"Caprese", pta:"{{P:Pizzeta Caprese}}", pza:"{{P:Pizza Caprese}}", d:"Salsa de tomates, mozzarella, tomate, albahaca y aceitunas."},
+ {n:"Fugazzeta", pta:"{{P:Pizzeta Fugazzeta}}", pza:"{{P:Pizza Fugazzeta}}", d:"Cebolla caramelizada y aceitunas sobre mozzarella."},
+ {n:"Mozzarella", pta:"{{P:Pizzeta Mozzarella}}", pza:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano."}
+];
+const PIZZA_FOTOS=[
+ {n:"Pizza Pepperoni", tag:"Pepperoni", img:"pizza_pepperoni.jpg", pos:"50% 58%", p:"{{P:Pizza Pepperoni}}", d:"Salsa de tomates, mozzarella, rodajas de salame y aceitunas. Pizza de 8 porciones."},
+ {n:"Pizza Mozzarella", tag:"Mozzarella", img:"pizza_mozza.jpg", pos:"50% 62%", p:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano. Pizza de 8 porciones. Con 2 pintas es la promo más pedida."}
+];
+
+const TRAGOS=[
+ {f:"Fernet & aperitivos", items:[
+  {n:"Copón de Fernet", feat:1, sm:"1.000 ml, con hielo y Coca-Cola", p:"{{P:Copon Fernet}}"},
+  {n:"Campari", ml:"500 ml", sm:"Bien frío, amargor intenso", p:"{{P:Campari}}"},
+  {n:"Gancia", ml:"500 ml", sm:"El aperitivo de siempre", p:"{{P:Gancia}}"},
+  {n:"Promo Fernet", sm:"Botella + Coca-Cola 2,5 L + hielo, para toda la mesa", p:"{{P:Promo Fernet}}"}]},
+ {f:"Gin", items:[
+  {n:"Gin Tonic Rider", ml:"500 ml", sm:"Gin premium, tónica y toque cítrico", p:"{{P:Gin Tonic Rider}}"},
+  {n:"Gin Merle", ml:"500 ml", sm:"Con tónica helada", p:"{{P:Gin Merle}}"},
+  {n:"dr. lemon", sm:"Botella de 1 litro bien helada", p:"{{P:dr. lemon}}"}]},
+ {f:"Ron & Cuba Libre", items:[
+  {n:"Cuba Libre Nacional", sm:"500 ml · Ron, Coca-Cola y hielo", p:"{{P:Cuba Libre Nacional}}"},
+  {n:"Cuba Libre Havana/Bacardí", sm:"500 ml · Versión premium", p:"{{P:Cuba Libre Havana/Bacardi}}"},
+  {n:"Medida de ron", p:"{{P:Medida ron}}"},
+  {n:"Ron Malibu", ml:"500 ml", sm:"Con toque a coco", p:"{{P:Ron Malibu}}"}]},
+ {f:"Whisky & vodka", items:[
+  {n:"Whisky Old", ml:"500 ml", p:"{{P:Whisky Old}}"},
+  {n:"Whisky Red Label", ml:"500 ml", sm:"En las rocas o solo", p:"{{P:Whisky Red Label}}"},
+  {n:"Vodka Sernova", ml:"500 ml", p:"{{P:Vodka Sernova}}"},
+  {n:"Vodka Smirnoff", ml:"500 ml", p:"{{P:Smirnoff}}"}]}
+];
+const ENVASADAS=[
+ {n:"Andes / Brahma", ml:"970 cc", p:"{{P:Andes/Brahma}}", sm:"Rubia de siempre, bien fría."},
+ {n:"Budweiser", ml:"970 cc", p:"{{P:Budweiser}}", sm:"Lager liviana y refrescante."},
+ {n:"Quilmes Stout", ml:"970 cc", p:"{{P:Quilmes Stout}}", sm:"Negra, con notas tostadas."},
+ {n:"Stella Artois", ml:"970 cc", p:"{{P:Stella}}", sm:"Lager belga, limpia y nítida."},
+ {n:"Corona", ml:"710 cc", p:"{{P:Corona}}", sm:"Ligera, ideal bien fría."}
+];
+const VINOS=[
+ {n:"Canciller Blanco", sm:"Vino blanco", p:"{{P:Canciller Blanco}}"},
+ {n:"Estancia de Mendoza", sm:"Sabor típico mendocino, equilibrado", p:"{{P:Estancia de Mendoza}}"},
+ {n:"Reserva de los Andes Blanco", sm:"Vino blanco", p:"{{P:Reserva de los Andes Blanco}}"},
+ {n:"Safari", sm:"Cuerpo justo, sabores nuevos", p:"{{P:Safari}}"},
+ {n:"Callia", sm:"Un clásico, equilibrado", p:"{{P:Callia}}"},
+ {n:"Oveja Black", sm:"Tinto de personalidad marcada", p:"{{P:Oveja Black}}"},
+ {n:"Cuatro Monos Locos", sm:"Ideal para una picada", p:"{{P:Cuatro Monos Locos}}"},
+ {n:"Cordero con piel de lobo", sm:"Sabor con carácter", p:"{{P:Cordero con piel de lobo}}"},
+ {n:"Oveja Black Chenin Dulce", sm:"Blanco dulce", p:"{{P:Oveja Black Chenin Dulce}}"},
+ {n:"Alma Mora", sm:"Con cuerpo, ideal para la picada", p:"{{P:Alma Mora}}"}
+];
+const SINALC=[
+ {n:"Pepsi 500 ml", sm:"También Pepsi Cero, Mirinda o Paso de los Toros", p:"{{P:Pepsi}}"},
+ {n:"Pepsi 1,5 L", p:"{{P:Pepsi 1.5 lts}}"},
+ {n:"Pinta de jugo 500 ml", p:"{{P:Pinta de Jugo}}"},
+ {n:"Jarra de jugo 1 L", p:"{{P:Jarra de Jugo}}"},
+ {n:"Agua saborizada 500 ml", p:"{{P:Agua Saborizada}}"},
+ {n:"Agua saborizada 1,5 L", p:"{{P:Agua Saborizada 1.5 lts}}"},
+ {n:"Agua mineral", p:"{{P:Agua Mineral}}"},
+ {n:"Agua mineral 1 L", p:"{{P:Agua Mineral 1 lts}}"},
+ {n:"Soda", p:"{{P:Soda}}"}
+];
+
+/* ═══════════════════════ Utilidades ═══════════════════════ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=p=>parseInt(String(p).replace(/\D/g,''),10)||0;
+const fmt=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const ITEMS=[]; const reg=it=>ITEMS.push(it)-1;
+
+/* Resorte (amortiguamiento y respuesta, como en iOS): arranca desde el valor actual y hereda la velocidad */
+function spring({from,to,velocity=0,response=.4,damping=1,onUpdate,onDone}){
+  const k=Math.pow(2*Math.PI/response,2), c=4*Math.PI*damping/response;
+  let x=from, v=velocity, last=performance.now(), raf=0;
+  function step(now){
+    const dt=Math.min((now-last)/1000,.032); last=now;
+    const n=Math.max(1,Math.ceil(dt/.004)), h=dt/n;
+    for(let i=0;i<n;i++){ v+=(-k*(x-to)-c*v)*h; x+=v*h; }
+    onUpdate(x);
+    if(Math.abs(v)<.6 && Math.abs(x-to)<.35){ onUpdate(to); onDone&&onDone(); return; }
+    raf=requestAnimationFrame(step);
+  }
+  raf=requestAnimationFrame(step);
+  return { stop(){ cancelAnimationFrame(raf); } };
+}
+const project=(v,d=.998)=>(v/1000)*d/(1-d);          // hacia dónde llega un gesto con inercia
+const rubber=(o,dim,c=.55)=>(o*dim*c)/(dim+c*Math.abs(o));
+
+/* Contador de precios */
+function countTo(el,to,ms=800){
+  cancelAnimationFrame(el._raf);
+  if(reduce){ el.textContent=fmt(to); el._v=to; return; }
+  const from=el._v==null?0:el._v, t0=performance.now();
+  (function tick(now){
+    const t=clamp((now-t0)/ms,0,1), e=1-Math.pow(1-t,3);
+    el._v=from+(to-from)*e; el.textContent=fmt(el._v);
+    if(t<1) el._raf=requestAnimationFrame(tick);
+  })(t0);
+}
+const priceHTML=(p,cu)=>`<span class="pr${cu?' cu':''}" data-v="${num(p)}">${esc(p)}</span>`;
+
+/* ═══════════════════════ Construcción ═══════════════════════ */
+const isPrem=it=>it.tag==='Premium';
+const chipH=it=>it.tag?(isPrem(it)
+  ?`<span class="chip prem">${esc(it.tag)}</span>`
+  :`<span class="chip${it.dark?' dark':''}${it.feat||it.tag==='Recomendado'||it.tag==='La insignia'?' shine':''}">${esc(it.tag)}</span>`):'';
+const searchKey=it=>esc(norm([it.n,it.d,it.sm,it.tag,it.pair].filter(Boolean).join(' ')));
+
+function rowHTML(it){
+  return `<div class="row rv${it.feat?' feat':''}${isPrem(it)?' prem':''}" data-s="${searchKey(it)}">
+    <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${chipH(it)}${it.ml?`<em class="ml">${esc(it.ml)}</em>`:''}</div>
+    ${(it.d||it.sm)?`<p>${esc(it.d||it.sm)}</p>`:''}
+    <span class="pr">${esc(it.p)}</span></div>`;
+}
+const fill=(sel,items)=>{ $(sel).innerHTML=items.map(rowHTML).join(''); };
+
+function cardHTML(it,extra=''){
+  const id=reg(it);
+  return `<button class="card rv${it.wide?' wide':''}${extra}" data-open="${id}" data-s="${searchKey(it)}" aria-label="${esc(it.n)}, ver detalle">
+    <img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos||'50% 50%'}">
+    ${chipH(it)}
+    <div class="c-body"><h3>${esc(it.n)}</h3>${priceHTML(it.p,1)}</div><span class="plus" aria-hidden="true">+</span></button>`;
+}
+
+/* Promos */
+$('#carousel').innerHTML=PROMOS.map(it=>`
+  <article class="promo${it.feat?' feat':''}" data-s="${searchKey(it)}">
+    <img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos}">
+    <div class="p-top"><span class="chip dark">${esc(it.w)}</span>${it.tag?`<span class="chip shine">${esc(it.tag)}</span>`:''}</div>
+    <div class="p-body"><h3>${esc(it.n)}</h3><p>${esc(it.d)}</p>
+      <div class="p-price">${priceHTML(it.p,1)}<span class="was">antes <s>$${esc(it.a)}</s></span></div>
+      <span class="save">Ahorrás $${esc(it.s)}</span></div>
+  </article>`).join('');
+$('#dots').innerHTML=PROMOS.map((_,i)=>`<button aria-label="Promo ${i+1}"></button>`).join('');
+
+/* Destacados */
+$('#spot').innerHTML=ESP.map(it=>cardHTML(it)).join('');
+
+/* Cervezas */
+$('#beers').innerHTML=BEERS.map(it=>{
+  const id=reg(it);
+  const dots=[1,2,3,4,5].map(n=>`<i class="${n<=it.am?'on':''}" style="--n:${n}"></i>`).join('');
+  return `<button class="beer rv" data-open="${id}" data-s="${searchKey(it)}" aria-label="${esc(it.n)}, ver detalle">
+    <div class="ph"><img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos};${it.zoom?`transform-origin:50% 78%`:''}"></div>
+    <div class="bd"><div class="t"><h3>${esc(it.n)}${it.star?'<i class="star">★</i>':''}</h3>${priceHTML(it.p,1)}</div>
+      <div class="meta">Pinta 500 ml</div>
+      <div class="meter"><span>Amargor</span>${dots}</div>
+      <p>${esc(it.d)}</p><div class="pair"><b>Ideal con:</b> ${esc(it.pair)}</div></div></button>`;
+}).join('');
+
+/* Para compartir / listas */
+$('#duo').innerHTML=COMPARTIR_FOTOS.map(it=>cardHTML(it)).join('');
+fill('#fritas',FRITAS); fill('#burgers',BURGERS); fill('#pachatas',PACHATAS); fill('#lomos',LOMOS);
+fill('#envas',ENVASADAS); fill('#vinosList',VINOS); fill('#sinAlc',SINALC);
+$('#burgerNote').innerHTML='Sumá Fritas Clásicas por <b style="color:var(--gold-2)">$'+'{{P:Fritas Clásicas}}'+'</b> o armá una promo y ahorrá.';
+$('#burgerNote').classList.add('rv'); $('#burgerNote').dataset.s='fritas promo combo';
+$('#pzphotos').innerHTML=PIZZA_FOTOS.map(it=>cardHTML(it)).join('');
+
+/* Pizzas: el selector cambia qué precio se ve */
+let pzKey='pza';
+$('#pizzas-list').innerHTML=PIZZAS.map(it=>`<div class="row rv${it.feat?' feat':''}${isPrem(it)?' prem':''}" data-s="${searchKey(it)}" data-pza="${num(it.pza)}" data-pzta="${num(it.pta)}">
+  <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${chipH(it)}</div><p>${esc(it.d)}</p>
+  <span class="pr cu" data-v="${num(it.pza)}">${esc(it.pza)}</span></div>`).join('');
+function placeThumb(){
+  const b=$('#pzseg button.on'), t=$('#pzthumb'); if(!b) return;
+  t.style.width=b.offsetWidth+'px'; t.style.transform=`translateX(${b.offsetLeft-4}px)`;
+}
+$('#pzseg').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||b.dataset.k===pzKey) return;
+  buzz(8); pzKey=b.dataset.k; $$('#pzseg button').forEach(x=>x.classList.toggle('on',x===b)); placeThumb();
+  $$('#pizzas-list .row').forEach((r,i)=>{ const el=$('.pr',r); setTimeout(()=>countTo(el,+r.dataset[pzKey],600),reduce?0:i*35); });
+});
+
+/* Tragos con solapas */
+$('#tragoTabs').innerHTML=TRAGOS.map((g,i)=>`<button role="tab" class="${i?'':'on'}" data-i="${i}">${esc(g.f)}</button>`).join('');
+$('#tragoPanels').innerHTML=TRAGOS.map((g,i)=>`<div class="panel list${i?'':' on'}" data-i="${i}" role="tabpanel"><div class="fam">${esc(g.f)}</div>${g.items.map((it,j)=>rowHTML(it).replace('class="row rv','style="--i:'+j+'" class="row rv')).join('')}</div>`).join('');
+$('#tragoTabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  $$('#tragoTabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $$('#tragoPanels .panel').forEach(p=>p.classList.toggle('on',p.dataset.i===b.dataset.i));
+  $$('#tragoPanels .panel.on .row').forEach(r=>r.classList.add('in'));
+  b.scrollIntoView({inline:'center',block:'nearest',behavior:reduce?'auto':'smooth'});
+});
+
+/* ═══════════════════════ Hoja de detalle ═══════════════════════
+   Sigue al dedo 1:1, hereda su velocidad al soltar, proyecta hacia dónde iba el gesto
+   y se puede volver a agarrar en pleno movimiento (también mientras se cierra). */
+const sheet=$('#sheet'), scrim=$('#scrim'), top_=$('#sheetTop'), sBody=$('#sBody');
+let H=0, curY=0, anim=null, isOpen=false, lastFocus=null;
+const buzz=ms=>{ try{ navigator.vibrate&&navigator.vibrate(ms); }catch(_){} };   // háptico solo en momentos que importan
+function setY(y){
+  curY=y; const p=H?clamp(1-y/H,0,1):0;
+  sheet.style.transform=`translate3d(0,${y}px,0)`;
+  sheet.style.opacity=(.4+.6*Math.min(1,p*2.5)).toFixed(3);        // el material "llega": se asienta mientras sube
+  scrim.style.opacity=p.toFixed(3);
+}
+function openSheet(it){
+  lastFocus=document.activeElement;
+  const hasImg=!!it.img; sheet.classList.toggle('noimg',!hasImg);
+  if(hasImg){ const im=$('#sImg'); im.src='img/'+it.img; im.style.objectPosition=it.pos||'50% 50%'; }
+  sBody.innerHTML=`${it.tag?`<div class="chips-r">${chipH({tag:it.tag,dark:it.dark})}</div>`:''}
+    <h3 id="sTitle">${esc(it.n)}</h3><span class="pr cu" data-v="${num(it.p)}">${esc(it.p)}</span>
+    <p>${esc(it.d||'')}</p>${it.pair?`<div class="pair"><b>Ideal con:</b> ${esc(it.pair)}</div>`:''}`;
+  sBody.scrollTop=0;
+  $$('.chip.shine,.chip.prem',sBody).forEach(el=>setTimeout(()=>lit(el),380));
+  sheet.hidden=false; scrim.hidden=false; document.body.classList.add('lock');
+  H=sheet.offsetHeight; isOpen=true; anim&&anim.stop();
+  try{ history.pushState({sheet:1},''); }catch(_){}
+  if(reduce){                                                   // sin desplazamiento: un fundido corto
+    sheet.style.transition=scrim.style.transition='opacity .2s linear';
+    curY=0; sheet.style.transform='none'; sheet.style.opacity=0; scrim.style.opacity=0;
+    requestAnimationFrame(()=>{ sheet.style.opacity=1; scrim.style.opacity=1; });
+  }else{
+    setY(H); anim=spring({from:H,to:0,response:.34,damping:.84,onUpdate:setY});
+  }
+  countTo($('.pr',sBody),num(it.p),700);
+  $('#sClose').focus({preventScroll:true});
+}
+function hideSheet(){
+  sheet.hidden=true; scrim.hidden=true; sheet.style.transition=scrim.style.transition=''; document.body.classList.remove('lock');
+  lastFocus&&lastFocus.focus&&lastFocus.focus({preventScroll:true});
+}
+function closeSheet(v=0,fromPop){
+  if(!isOpen) return; isOpen=false; anim&&anim.stop();
+  if(!fromPop){ try{ if(history.state&&history.state.sheet) history.back(); }catch(_){} }
+  if(reduce){ sheet.style.opacity=0; scrim.style.opacity=0; setTimeout(hideSheet,200); return; }
+  anim=spring({from:curY,to:H,velocity:v,response:.36,damping:1,onUpdate:setY,onDone:hideSheet});
+}
+document.addEventListener('click',e=>{ const t=e.target.closest('[data-open]'); if(t){ openSheet(ITEMS[+t.dataset.open]); } });
+$('#sClose').addEventListener('click',()=>closeSheet());
+scrim.addEventListener('click',()=>closeSheet());
+addEventListener('keydown',e=>{
+  if(!isOpen) return;
+  if(e.key==='Escape') closeSheet();
+  if(e.key==='Tab'){ e.preventDefault(); $('#sClose').focus(); }  // el foco no se escapa detrás de la hoja
+});
+addEventListener('popstate',()=>closeSheet(0,true));
+
+/* Arrastre: 1:1 con el dedo, con resistencia progresiva si se tira hacia arriba */
+let drag=null, dragId=null;
+function dragStart(y){
+  anim&&anim.stop();                                            // se parte siempre del valor que se ve en pantalla
+  if(!isOpen&&!sheet.hidden){ isOpen=true; try{ history.pushState({sheet:1},''); }catch(_){} }   // agarrada a mitad de cierre: vuelve a estar abierta
+  drag={y0:y,base:curY,pts:[{t:performance.now(),y}]};
+}
+function dragMove(y){
+  const d=y-drag.y0+drag.base;
+  setY(d>=0?d:-rubber(-d,H));
+  drag.pts.push({t:performance.now(),y}); if(drag.pts.length>6) drag.pts.shift();
+}
+function dragEnd(){
+  if(!drag) return;
+  const p=drag.pts, b=p[p.length-1], a=p.find(q=>b.t-q.t<110)||p[0];
+  const v=b.t>a.t?(b.y-a.y)/(b.t-a.t)*1000:0;                  // velocidad al soltar, en px/s
+  drag=null;
+  if(curY+project(v)>H*.5){ buzz(6); closeSheet(v); }           // decide por hacia dónde iba, no por dónde quedó
+  else anim=spring({from:curY,to:0,velocity:v,response:.3,damping:.8,onUpdate:setY});
+}
+top_.addEventListener('pointerdown',e=>{ if(e.target.closest('.x')) return; top_.setPointerCapture(e.pointerId); dragId=e.pointerId; dragStart(e.clientY); });
+top_.addEventListener('pointermove',e=>{ if(drag&&e.pointerId===dragId) dragMove(e.clientY); });
+const pEnd=e=>{ if(e.pointerId===dragId){ dragId=null; dragEnd(); } };
+top_.addEventListener('pointerup',pEnd); top_.addEventListener('pointercancel',pEnd);
+/* También se arrastra desde el texto, pero solo si está arriba de todo y el dedo baja (umbral de 10 px) */
+let tb=null;
+sBody.addEventListener('touchstart',e=>{ tb=sBody.scrollTop<=0?{y0:e.touches[0].clientY,on:false}:null; },{passive:true});
+sBody.addEventListener('touchmove',e=>{
+  if(!tb) return; const y=e.touches[0].clientY;
+  if(!tb.on){ if(y-tb.y0>10&&sBody.scrollTop<=0){ tb.on=true; dragStart(y); } else return; }
+  e.preventDefault(); dragMove(y);
+},{passive:false});
+const tEnd=()=>{ if(tb&&tb.on) dragEnd(); tb=null; };
+sBody.addEventListener('touchend',tEnd); sBody.addEventListener('touchcancel',tEnd);
+document.addEventListener('touchstart',()=>{},{passive:true});   // iOS: que :active responda en el instante del toque
+
+/* ═══════════════════════ Movimiento de la página ═══════════════════════ */
+/* Aparición escalonada */
+$$('.rv').forEach(el=>{
+  const sibs=$$(':scope > .rv',el.parentElement); el.style.setProperty('--i',Math.min(sibs.indexOf(el),7));
+});
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+$$('.rv').forEach(el=>revObs.observe(el));
+/* Los precios grandes cuentan desde cero cuando entran en pantalla */
+const cuObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ countTo(e.target,+e.target.dataset.v,900); cuObs.unobserve(e.target); } }),{threshold:.7});
+$$('.cu').forEach(el=>{ if(!el.closest('#sBody')) cuObs.observe(el); });
+const seenObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('seen'); seenObs.unobserve(e.target); } }),{threshold:.4});
+$$('.promo').forEach(el=>seenObs.observe(el));
+
+/* Destello de "La insignia" y brillo de "Premium": suceden cuando el elemento aparece y cada vez que cruza el centro de la pantalla */
+const lit=el=>{ el.classList.remove('lit'); void el.offsetWidth; el.classList.add('lit'); };
+const litTargets=$$('.chip.shine,.chip.prem,.row.prem');
+const centerObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) lit(e.target); else e.target.classList.remove('lit'); }),{rootMargin:'-38% 0px -38% 0px',threshold:0});
+const appearObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ setTimeout(()=>lit(e.target),250); appearObs.unobserve(e.target); } }),{threshold:.9});
+litTargets.forEach(el=>{ centerObs.observe(el); appearObs.observe(el); });
+
+/* ¿Hay franja reservada arriba (app del celular)? Si la hay, el logo va ahí y no se repite en el menú */
+(function(){
+  const p=document.createElement('div'); p.style.cssText='position:fixed;top:0;left:0;visibility:hidden;padding-top:env(safe-area-inset-top,0px)';
+  document.body.appendChild(p); if(p.offsetHeight>8) document.documentElement.classList.add('has-inset'); p.remove();
+})();
+/* Cinta */
+(function(){
+  const t='Cerveza artesanal<b>·</b>Hamburguesas<b>·</b>Pachatas<b>·</b>Pizzas<b>·</b>Tragos<b>·</b>Vinos<b>·</b>';
+  $('#ticker').innerHTML=`<span>${t}</span><span>${t}</span><span>${t}</span><span>${t}</span>`;
+})();
+
+/* Estado del local según la hora de San Juan */
+function openState(){
+  let h=21;
+  try{ h=+new Intl.DateTimeFormat('en-GB',{timeZone:'America/Argentina/San_Juan',hour:'2-digit',hourCycle:'h23'}).format(new Date()); }catch(_){}
+  const on=(h>=21||h<4), pill=$('#openPill');
+  pill.classList.toggle('on',on);
+  $('#openTxt').textContent=on?'Abierto ahora · hasta las 04 hs':'Cerrado ahora · abrimos a las 21 hs';
+}
+openState(); setInterval(openState,60000);
+
+/* Cabecera con paralaje, fotos con paralaje suave y carrusel con foco */
+const nav=$('#nav'), heroBg=$('.hero-bg'), hero=$('.hero'), pxImgs=$$('[data-px]');
+const mqCar=matchMedia('(max-width:899px)'), car=$('#carousel'), promos=$$('.promo'), dots=$$('#dots button');
+let ticking=false;
+function frame(){
+  ticking=false; const y=scrollY, hh=hero.offsetHeight;
+  if(!reduce&&y<hh+100) heroBg.style.transform=`translate3d(0,${y*.32}px,0)`;
+  nav.classList.toggle('past',y>hh-80); document.body.classList.toggle('past',y>hh-80);
+  if(!reduce) pxImgs.forEach(im=>{ const r=im.parentElement.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
+    const k=(r.top+r.height/2-innerHeight/2)/innerHeight; im.style.transform=`translate3d(0,${(-k*34).toFixed(1)}px,0)`; });
+}
+addEventListener('scroll',()=>{ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
+function carFrame(){
+  if(!mqCar.matches){ promos.forEach(p=>p.style.removeProperty('--k')); return; }
+  const mid=car.scrollLeft+car.clientWidth/2; let best=0,bd=1e9;
+  promos.forEach((p,i)=>{ const d=Math.abs(p.offsetLeft+p.offsetWidth/2-mid); if(d<bd){ bd=d; best=i; }
+    p.style.setProperty('--k',reduce?1:clamp(1-d/(p.offsetWidth*1.05),0,1).toFixed(3)); });
+  dots.forEach((d,i)=>d.classList.toggle('on',i===best));
+}
+let carT=false; car.addEventListener('scroll',()=>{ if(!carT){ carT=true; requestAnimationFrame(()=>{ carT=false; carFrame(); }); } },{passive:true});
+dots.forEach((d,i)=>d.addEventListener('click',()=>{ const p=promos[i]; car.scrollTo({left:p.offsetLeft-(car.clientWidth-p.offsetWidth)/2,behavior:reduce?'auto':'smooth'}); }));
+addEventListener('resize',()=>{ carFrame(); placeThumb(); });
+
+/* Navegación: desplazamiento suave y sección activa */
+const chips=$$('#chips a'), secs=chips.map(a=>$(a.getAttribute('href')));
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-go]'); if(!a) return; e.preventDefault();
+  const t=$(a.getAttribute('href')); if(!t) return;
+  const off=t.id==='top'?0:(t.getBoundingClientRect().top+scrollY-nav.offsetHeight+6);
+  scrollTo({top:off,behavior:reduce?'auto':'smooth'});
+});
+const spy=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  const i=secs.indexOf(e.target); chips.forEach((c,j)=>c.classList.toggle('on',j===i));
+  const c=chips[i], box=$('#chips'); box.scrollTo({left:c.offsetLeft-box.clientWidth/2+c.offsetWidth/2,behavior:reduce?'auto':'smooth'});
+}),{rootMargin:'-42% 0px -52% 0px'});
+secs.forEach(s=>spy.observe(s));
+
+/* Búsqueda */
+const q=$('#q'), sbar=$('#sbar'), sbtn=$('#sbtn');
+sbtn.addEventListener('click',()=>{
+  const open=!sbar.classList.contains('open'); sbar.classList.toggle('open',open); sbtn.setAttribute('aria-expanded',open);
+  if(open) setTimeout(()=>q.focus(),120); else{ q.value=''; filter(); }
+});
+function filter(){
+  const t=norm(q.value).trim(); document.body.classList.toggle('searching',!!t);
+  $$('[data-s]').forEach(el=>{ el.classList.remove('rv'); el.classList.add('in'); el.style.display=(!t||el.dataset.s.includes(t))?'':'none'; });
+  let any=false;
+  $$('main .sec').forEach(s=>{ const vis=$$('[data-s]',s).some(el=>el.style.display!=='none'); s.style.display=(!t||vis)?'':'none'; if(t&&vis) any=true; });
+  $('#empty').hidden=!(t&&!any);
+  const n=$$('[data-s]').filter(el=>el.style.display!=='none').length;
+  $('#count').textContent=t&&n?(n+(n===1?' resultado':' resultados')):'';
+}
+q.addEventListener('input',filter);
+
+/* Primer cuadro */
+placeThumb(); carFrame(); frame();
+addEventListener('load',()=>{ placeThumb(); carFrame(); });
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ placeThumb(); carFrame(); });
+</script>
+</body>
+</html>
