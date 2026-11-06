@@ -2,7 +2,7 @@ name: Actualizar carta desde Fudo
 
 on:
   schedule:
-    - cron: '15 */3 * * *'   # cada 3 horas (hora UTC)
+    - cron: '5 23 * * *'   # todos los días a las 23:05 UTC = 20:05 hora Argentina (GitHub puede demorarla unos minutos)
   workflow_dispatch:         # también se puede lanzar a mano desde la pestaña Actions
   push:
     branches: [main]
