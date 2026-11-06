@@ -281,6 +281,17 @@ body.searching .fam{ display:block }
 .cta{ display:flex; gap:8px; flex-wrap:nowrap }
 .cta .btn{ flex:1 1 0; min-width:0; padding:14px 8px; gap:6px; font-size:0.875rem; white-space:nowrap }
 .cta .btn svg{ width:16px; height:16px; flex:none }
+/* también en PedidosYa y Rappi */
+.deliv{ display:grid; gap:12px; justify-items:center; text-align:center }
+.deliv p{ font:600 .8125rem/1 var(--body, inherit); letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.72) }
+.deliv-row{ display:flex; gap:10px; width:100%; max-width:420px }
+.dlv{ flex:1 1 0; min-width:0; height:52px; border-radius:16px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 10px 24px -12px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.28); transition:transform .15s ease-out, filter .15s }
+.dlv svg{ width:78%; height:auto; max-height:70% }
+.dlv:active{ transform:scale(.96) }
+.dlv.pya{ background:#fa0050 }
+.dlv.rap{ background:#ff441f }
+@media (hover:hover){ .dlv:hover{ transform:translateY(-2px); filter:brightness(1.08) } }
 
 /* ───────────── Hoja de detalle ───────────── */
 .scrim{ position:fixed; inset:0; z-index:90; background:rgba(3,10,7,.66); opacity:0; backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px) }
@@ -487,6 +498,17 @@ body.searching .fam{ display:block }
       <a class="btn gold" href="tel:+542645855023"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>Llamar</a>
       <a class="btn glass" href="https://wa.me/5492645855023" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn glass" href="https://maps.app.goo.gl/WXDzmFRRKFVxtKYg9" target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+    <div class="deliv">
+      <p>También encontranos en</p>
+      <div class="deliv-row">
+        <a class="dlv pya" href="https://www.pedidosya.com.ar/restaurantes/san-juan/brunder-0043abd6-e2d0-47ef-ae3a-4ea66e0cbbcc-menu" target="_blank" rel="noopener" aria-label="Brunder en PedidosYa">
+          <svg viewBox="0 0 168 40" role="img" aria-hidden="true"><text x="84" y="29" text-anchor="middle" font-family="Poppins,'Avenir Next','Segoe UI',Arial,sans-serif" font-weight="800" font-size="25" letter-spacing="-.6" fill="#fff">PedidosYa</text></svg>
+        </a>
+        <a class="dlv rap" href="https://www.rappi.com.ar/restaurantes/274602-brunder" target="_blank" rel="noopener" aria-label="Brunder en Rappi">
+          <svg viewBox="0 0 168 40" role="img" aria-hidden="true"><text x="84" y="30" text-anchor="middle" font-family="Poppins,'Avenir Next','Segoe UI',Arial,sans-serif" font-weight="800" font-size="28" letter-spacing="-.8" fill="#fff">rappi</text></svg>
+        </a>
+      </div>
     </div>
   </div>
 </footer>
