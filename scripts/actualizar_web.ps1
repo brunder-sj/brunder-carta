@@ -12,6 +12,7 @@ $salida   = Join-Path $raiz 'docs/index.html'
 $jsonPrev = Join-Path $raiz 'data/precios_fudo.json'
 
 function Norm([string]$s){
+  $s = [regex]::Replace($s,'<!--.*?-->','')   # Fudo a veces antepone comentarios <!----> al nombre
   $d = $s.Normalize([Text.NormalizationForm]::FormD)
   $sb = New-Object Text.StringBuilder
   foreach($ch in $d.ToCharArray()){ if([Globalization.CharUnicodeInfo]::GetUnicodeCategory($ch) -ne 'NonSpacingMark'){ [void]$sb.Append($ch) } }
@@ -44,7 +45,8 @@ foreach($chunk in ($html -split '<div class="product__content"' | Select-Object 
   $n = [regex]::Match($chunk,'<h4[^>]*>(.*?)</h4>','Singleline')
   $p = [regex]::Match($chunk,'<span[^>]*>\$\s*([\d\.]+),(\d{2})</span>')
   if($n.Success -and $p.Success){
-    $name  = [Net.WebUtility]::HtmlDecode($n.Groups[1].Value).Trim()
+    $rawName = [regex]::Replace([regex]::Replace($n.Groups[1].Value,'<!--.*?-->',''),'<[^>]+>','')
+    $name  = [Net.WebUtility]::HtmlDecode($rawName).Trim()
     $price = [double]::Parse((($p.Groups[1].Value -replace '\.','') + '.' + $p.Groups[2].Value),[Globalization.CultureInfo]::InvariantCulture)
     $fudo[$name] = $price
   }
@@ -55,10 +57,15 @@ $idx = @{}; foreach($k in $fudo.Keys){ $idx[(Norm $k)] = $fudo[$k] }
 
 # ---------- 3. Últimos precios conocidos (por si algún producto cambia de nombre en Fudo) ----------
 $prev = @{}
+$prevRaw = [ordered]@{}   # nombre limpio -> precio, para no perder productos que Fudo deja de mostrar un rato
 if(Test-Path $jsonPrev){
   $txt = [IO.File]::ReadAllText($jsonPrev,[Text.Encoding]::UTF8).TrimStart([char]0xFEFF)
   $o = $txt | ConvertFrom-Json
-  foreach($pr in $o.PSObject.Properties){ $prev[(Norm $pr.Name)] = [double]$pr.Value }
+  foreach($pr in $o.PSObject.Properties){
+    $clean = ([regex]::Replace($pr.Name,'<!--.*?-->','')).Trim()
+    $prev[(Norm $pr.Name)] = [double]$pr.Value
+    if($clean -and ([double]$pr.Value) -gt 0){ $prevRaw[$clean] = [double]$pr.Value }
+  }
 }
 $faltan = New-Object Collections.Generic.List[string]
 function Precio([string]$key){
@@ -84,12 +91,19 @@ $t = [regex]::Replace($t,'\{\{SUM:(.+?)\}\}',  { param($m) Fmt (Suma $m.Groups[1
 $t = [regex]::Replace($t,'\{\{DIF:(.+?)\|(.+?)\}\}',{ param($m) Fmt ((Suma $m.Groups[2].Value) - (Precio $m.Groups[1].Value)) })
 $t = [regex]::Replace($t,'\{\{P:(.+?)\}\}',    { param($m) Fmt (Precio $m.Groups[1].Value) })
 if($t.Contains('{{')){ throw 'Quedaron precios sin reemplazar en la plantilla.' }
+# Protección: si muchos productos no se reconocen, la lectura de Fudo salió mal -> no se publica nada.
+if($faltan.Count -gt 8){ throw "No se reconocieron $($faltan.Count) productos de la carta en Fudo (¿cambió el formato de la página?). No publico nada." }
+$ceros = [regex]::Matches($t,'n:"([^"]+)"[^\r\n]*?\bp:"0"') | ForEach-Object { $_.Groups[1].Value }
+if($ceros){ Write-Host ('Productos con precio 0: ' + ($ceros -join ', ')); if($faltan.Count){ Write-Host ('No reconocidos en Fudo: ' + ($faltan -join ', ')) }; throw 'Hay productos con precio 0 en la carta. No publico nada.' }
 New-Item -ItemType Directory -Force (Split-Path $salida -Parent) | Out-Null
 [IO.File]::WriteAllText($salida,$t,(New-Object Text.UTF8Encoding $false))
 
 # ---------- 5. Guardar los precios leídos y avisar de lo que no se encontró ----------
 New-Item -ItemType Directory -Force (Split-Path $jsonPrev -Parent) | Out-Null
-[IO.File]::WriteAllText($jsonPrev,($fudo | ConvertTo-Json),(New-Object Text.UTF8Encoding $false))
+$merged = [ordered]@{}
+foreach($k in $prevRaw.Keys){ $merged[$k] = $prevRaw[$k] }
+foreach($k in $fudo.Keys){ $merged[$k] = $fudo[$k] }
+[IO.File]::WriteAllText($jsonPrev,($merged | ConvertTo-Json),(New-Object Text.UTF8Encoding $false))
 if($faltan.Count -gt 0){
   Write-Host 'ATENCIÓN: estos productos de la carta no aparecen en Fudo con ese nombre (se dejó el último precio conocido):'
   $faltan | ForEach-Object { Write-Host "  $_" }
