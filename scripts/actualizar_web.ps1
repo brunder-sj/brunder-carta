@@ -1,4 +1,4 @@
-# actualizar_web.ps1
+﻿# actualizar_web.ps1
 # Lee los precios de la carta QR de Fudo (la misma página pública que ve un cliente) y arma la carta web:
 #   plantilla/carta_web_plantilla.html  +  precios de Fudo  ->  docs/index.html
 # No usa contraseñas ni claves. Funciona en GitHub Actions (Linux) y en Windows.
@@ -92,7 +92,7 @@ $t = [regex]::Replace($t,'\{\{DIF:(.+?)\|(.+?)\}\}',{ param($m) Fmt ((Suma $m.Gr
 $t = [regex]::Replace($t,'\{\{P:(.+?)\}\}',    { param($m) Fmt (Precio $m.Groups[1].Value) })
 if($t.Contains('{{')){ throw 'Quedaron precios sin reemplazar en la plantilla.' }
 # Protección: si muchos productos no se reconocen, la lectura de Fudo salió mal -> no se publica nada.
-if($faltan.Count -gt 8){ throw "No se reconocieron $($faltan.Count) productos de la carta en Fudo (¿cambió el formato de la página?). No publico nada." }
+if($faltan.Count -gt 25){ throw "No se reconocieron $($faltan.Count) productos de la carta en Fudo (¿cambió el formato de la página?). No publico nada." }
 $ceros = [regex]::Matches($t,'n:"([^"]+)"[^\r\n]*?\bp:"0"') | ForEach-Object { $_.Groups[1].Value }
 if($ceros){ Write-Host ('Productos con precio 0: ' + ($ceros -join ', ')); if($faltan.Count){ Write-Host ('No reconocidos en Fudo: ' + ($faltan -join ', ')) }; throw 'Hay productos con precio 0 en la carta. No publico nada.' }
 New-Item -ItemType Directory -Force (Split-Path $salida -Parent) | Out-Null
