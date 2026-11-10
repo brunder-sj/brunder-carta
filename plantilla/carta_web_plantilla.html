@@ -135,6 +135,9 @@ html.has-inset .nav-logo{ display:none }
 /* Precio: el $ va por delante, el número cuenta al aparecer */
 .pr{ font:700 1.375rem/1 var(--disp); letter-spacing:.02em; color:var(--gold-2); white-space:nowrap }
 .pr::before{ content:"$"; font-size:.62em; margin-right:2px; opacity:.75; vertical-align:.18em }
+/* al terminar de armarse, el precio da un pequeño "pop" con destello (una sola vez) */
+.pr.pop{ display:inline-block; animation:prPop .5s cubic-bezier(.3,1.6,.5,1) 1 both }
+@keyframes prPop{ 0%{ transform:scale(1); filter:brightness(1) } 38%{ transform:scale(1.18); filter:brightness(1.5) drop-shadow(0 0 6px rgba(241,205,124,.7)) } 100%{ transform:scale(1); filter:brightness(1) } }
 
 .chip{ display:inline-block; font:700 0.625rem/1 var(--txt); letter-spacing:.1em; text-transform:uppercase; color:#1b1405; background:var(--gold-2); padding:5px 9px 4px; border-radius:99px; white-space:nowrap }
 .chip.dark{ background:rgba(246,240,226,.14); color:var(--ink); border:1px solid var(--line) }
@@ -339,6 +342,7 @@ body.searching .fam{ display:block }
   .wave svg{ animation:none !important }
   .ticker div{ animation:tk 70s linear infinite !important }   /* la cinta sigue corriendo, más lenta: es una franja chica que se desplaza en horizontal */
   .hero-bg img,.promo img,.card img,.beer .ph img,.banner img{ transform:none !important }
+  .pr.pop{ animation:none !important }
   .rv{ transform:none }
   .rv.in{ transition:opacity .25s linear 0s !important }
   .sec-h .rule{ transform:scaleX(1); transition:none }
@@ -687,15 +691,18 @@ function spring({from,to,velocity=0,response=.4,damping=1,onUpdate,onDone}){
 const project=(v,d=.998)=>(v/1000)*d/(1-d);          // hacia dónde llega un gesto con inercia
 const rubber=(o,dim,c=.55)=>(o*dim*c)/(dim+c*Math.abs(o));
 
-/* Contador de precios */
-function countTo(el,to,ms=800){
+/* Precio: aparición rápida (un pequeño ascenso con fundido y un ajuste corto de cifras), menos de un tercio de segundo */
+function countTo(el,to,ms=300){
   cancelAnimationFrame(el._raf);
   if(reduce){ el.textContent=fmt(to); el._v=to; return; }
-  const from=el._v==null?0:el._v, t0=performance.now();
+  const first=el._v==null;
+  const from=first?to*.85:el._v, t0=performance.now();
+  if(first&&el.animate){ el.animate([{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.22,.8,.24,1)'}); }
   (function tick(now){
-    const t=clamp((now-t0)/ms,0,1), e=1-Math.pow(1-t,3);
+    const t=clamp((now-t0)/ms,0,1), e=1-Math.pow(1-t,4);
     el._v=from+(to-from)*e; el.textContent=fmt(el._v);
     if(t<1) el._raf=requestAnimationFrame(tick);
+    else if(first){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   })(t0);
 }
 const priceHTML=(p,cu)=>`<span class="pr${cu?' cu':''}" data-v="${num(p)}">${esc(p)}</span>`;
@@ -769,7 +776,7 @@ function placeThumb(){
 $('#pzseg').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b||b.dataset.k===pzKey) return;
   buzz(8); pzKey=b.dataset.k; $$('#pzseg button').forEach(x=>x.classList.toggle('on',x===b)); placeThumb();
-  $$('#pizzas-list .row').forEach((r,i)=>{ const el=$('.pr',r); setTimeout(()=>countTo(el,+r.dataset[pzKey],600),reduce?0:i*35); });
+  $$('#pizzas-list .row').forEach((r,i)=>{ const el=$('.pr',r); setTimeout(()=>countTo(el,+r.dataset[pzKey],260),reduce?0:i*20); });
 });
 
 /* Tragos con solapas */
@@ -814,7 +821,7 @@ function openSheet(it){
   }else{
     setY(H); anim=spring({from:H,to:0,response:.34,damping:.84,onUpdate:setY});
   }
-  countTo($('.pr',sBody),num(it.p),700);
+  countTo($('.pr',sBody),num(it.p),300);
   $('#sClose').focus({preventScroll:true});
 }
 function hideSheet(){
@@ -881,7 +888,7 @@ $$('.rv').forEach(el=>{
 const revObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); } }),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
 $$('.rv').forEach(el=>revObs.observe(el));
 /* Los precios grandes cuentan desde cero cuando entran en pantalla */
-const cuObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ countTo(e.target,+e.target.dataset.v,900); cuObs.unobserve(e.target); } }),{threshold:.7});
+const cuObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ countTo(e.target,+e.target.dataset.v,300); cuObs.unobserve(e.target); } }),{threshold:.35});
 $$('.cu').forEach(el=>{ if(!el.closest('#sBody')) cuObs.observe(el); });
 const seenObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('seen'); seenObs.unobserve(e.target); } }),{threshold:.4});
 $$('.promo').forEach(el=>seenObs.observe(el));
