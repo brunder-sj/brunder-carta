@@ -364,7 +364,39 @@ body.searching .fam{ display:block }
 .dlv{ flex:none; width:64px; height:64px; padding:0; border:0; background:none !important; box-shadow:none; overflow:visible }
 .dlv img{ width:100%; height:100%; object-fit:contain; border-radius:16px; filter:drop-shadow(0 8px 14px rgba(0,0,0,.45)) }
 .dlv.rap img{ transform:scale(1.16) }
-@media (hover:hover){ .dlv:hover{ filter:none; transform:translateY(-3px) } }</style>
+@media (hover:hover){ .dlv:hover{ filter:none; transform:translateY(-3px) } }/* ══════════ REDISEÑO · capa común ══════════ */
+.sec-h h2,.foot h2{ font-family:var(--title); font-weight:400 }
+.sec-h .rule{ width:min(250px,64%); height:7px; border-radius:0; background:none; border-top:2px solid var(--gold); border-bottom:1px solid var(--rule-2); margin-top:14px }
+.promo,.card,.beer,.banner,.ubanner,.bt{ border-radius:var(--r) }
+.btn,.chips a,.tabs button,.seg,.seg button,.seg .thumb,.sbar input,.note,.row,.card .plus{ border-radius:var(--r-s) }
+.chips a{ text-transform:uppercase }
+/* marco fino dentro de las tarjetas con foto, como una placa */
+.card::before,.promo:not(.feat)::before{ content:""; position:absolute; inset:8px; border:1px solid var(--plate); border-radius:calc(var(--r) - 4px); z-index:1; pointer-events:none }
+.p-top{ top:18px; left:18px; right:18px }
+.card .chip{ top:17px; left:17px }
+.p-body{ padding:0 20px 20px }
+.card .c-body{ padding:0 18px 18px }
+.card .plus{ right:17px; bottom:17px }
+/* línea de puntos desde el nombre hasta el precio, como en las cartas de imprenta */
+.row-n{ flex-wrap:nowrap; align-items:baseline }
+.row-n .nm{ min-width:0 }
+.row-n::after{ content:""; order:9; flex:1 1 14px; min-width:14px; border-bottom:2px dotted var(--leader); transform:translateY(-4px) }
+.row::after{ display:none }
+.row{ padding-block:13px }
+/* marco de la portada */
+.hero::before{ content:""; position:absolute; inset:12px 12px 62px; border:1px solid var(--plate); outline:1px solid var(--plate-2); outline-offset:4px; z-index:-1; pointer-events:none }
+.open-pill{ top:26px }
+/* ══════════ REDISEÑO · Brunder, cervecería de Nueva York ══════════
+   Títulos condensados como al principio, marcos de bronce, filetes dobles y línea de puntos hasta el precio. */
+:root{ --title:'Barlow Condensed','Bahnschrift','Arial Narrow',sans-serif;
+  --r:8px; --r-s:6px; --rule-2:rgba(216,171,78,.65); --plate:rgba(241,205,124,.34); --plate-2:rgba(241,205,124,.16); --leader:rgba(246,240,226,.22) }
+.sec-h h2,.foot h2{ text-transform:uppercase; font-weight:700; letter-spacing:-.008em; font-size:clamp(40px,11vw,60px); line-height:.92 }
+.sub-h,.fam{ font-family:var(--title); font-weight:700; text-transform:uppercase; letter-spacing:.03em; font-size:1.625rem }
+.promo h3,.card h3,.beer h3,.s-body h3{ font-family:var(--title); font-weight:700; text-transform:uppercase; letter-spacing:0 }
+.chip{ border-radius:3px }
+.btn{ font-weight:650 }
+.chips a,.tabs button,.seg button{ font-weight:650 }
+</style>
 </head>
 <body>
 <noscript><p style="padding:40px 20px;text-align:center">Para ver la carta de Brunder activá JavaScript en tu navegador.</p></noscript>
