@@ -186,7 +186,7 @@ html.has-inset .nav-logo{ display:none }
 .was s{ text-decoration-thickness:1px }
 .save{ display:inline-flex; margin-top:10px; padding:6px 11px; border-radius:99px; font-size:0.7812rem; font-weight:700; color:#0d2a1b; background:#6fe3a0; opacity:0; transform:scale(.7) }
 /* el ahorro "aparece" una vez, con impulso, cuando la promo entra en foco; no hay animaciones en bucle que cansen la vista */
-.promo.seen .save{ animation:pop .7s var(--press-out) .45s both }
+.promo .save{ opacity:1; transform:none }
 @keyframes pop{ from{ opacity:0; transform:scale(.7) } to{ opacity:1; transform:scale(1) } }
 .dots{ display:flex; justify-content:center; gap:7px; margin-top:-8px }
 .dots button{ width:16px; height:30px; padding:11px 4.5px; border-radius:99px; background:var(--line); background-clip:content-box; transition:width .35s var(--ease), background .3s }
@@ -768,7 +768,7 @@ $('#carousel').innerHTML=PROMOS.map(it=>`
     <img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos}">
     <div class="p-top"><span class="chip dark">${esc(it.w)}</span>${it.tag?`<span class="chip shine">${esc(it.tag)}</span>`:''}</div>
     <div class="p-body"><h3>${esc(it.n)}</h3><p>${esc(it.d)}</p>
-      <div class="p-price">${priceHTML(it.p,1)}<span class="was">antes <s>$${esc(it.a)}</s></span></div>
+      <div class="p-price">${priceHTML(it.p,0)}<span class="was">antes <s>$${esc(it.a)}</s></span></div>
       <span class="save">Ahorrás $${esc(it.s)}</span></div>
   </article>`).join('');
 $('#dots').innerHTML=PROMOS.map((_,i)=>`<button aria-label="Promo ${i+1}"></button>`).join('');
