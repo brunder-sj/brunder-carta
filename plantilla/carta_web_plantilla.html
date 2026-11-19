@@ -592,7 +592,7 @@ const BEERS=[
 
 const COMPARTIR_FOTOS=[
  {n:"Picada Brunder", tag:"Ideal para compartir", img:"picada.jpg", pos:"40% 50%", p:"{{P:Picada Fiambre}}", d:"Salame, queso tybo y jamón cocido (180 g de cada uno), aceitunas, pan de campo, mayonesa casera y barbacoa. Para 2 o 3 personas.", pair:"Una Golden Ale"},
- {n:"Fritas Power", tag:"Nuevo", dark:1, img:"power.jpg", pos:"50% 78%", p:"{{P:Fritas Power}}", d:"Fritas, tiras de lomo, bacon, huevo frito y mayonesa de la casa. Un plato entero para compartir entre dos.", pair:"American IPA"}
+ {n:"Fritas Power", tag:"Nuevo", dark:1, img:"power.jpg", pos:"42% 62%", p:"{{P:Fritas Power}}", d:"Fritas, tiras de lomo, bacon, huevo frito y mayonesa de la casa. Un plato entero para compartir entre dos.", pair:"American IPA"}
 ];
 const FRITAS=[
  {n:"Fritas Brunder", star:1, feat:1, p:"{{P:Fritas con Cheddar y Panceta}}", d:"Cheddar fundido y panceta ahumada."},
@@ -725,7 +725,8 @@ const rubber=(o,dim,c=.55)=>(o*dim*c)/(dim+c*Math.abs(o));
 
 /* Precio: aparición rápida (un pequeño ascenso con fundido y un ajuste corto de cifras), menos de un tercio de segundo */
 function countTo(el,to,ms=300){
-  cancelAnimationFrame(el._raf);
+  /* sin animación: el precio aparece directamente con su valor */
+  cancelAnimationFrame(el._raf); el.textContent=fmt(to); el._v=to; return;
   if(reduce){ el.textContent=fmt(to); el._v=to; return; }
   const first=el._v==null;
   const from=first?to*.85:el._v, t0=performance.now();
