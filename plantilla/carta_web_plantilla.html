@@ -404,6 +404,12 @@ body.searching .fam{ display:block }
 .ausp img.brahma{ height:22px }
 .hero-in .ausp{ align-self:center }
 .foot-in .ausp{ margin-top:26px }
+/* Símbolo de comida vegetariana (hoja) */
+.veg{ display:inline-grid; place-items:center; flex:none; width:22px; height:22px; border-radius:50%; background:#2f8f55; vertical-align:middle; box-shadow:inset 0 0 0 1px rgba(255,255,255,.28) }
+.veg svg{ width:14px; height:14px; display:block; fill:#fff; stroke:none; margin:0 }
+.veg svg path.n{ fill:none; stroke:#2f8f55; stroke-width:1.7; stroke-linecap:round }
+.row-n .veg{ align-self:center }
+.veg-key{ display:flex; align-items:center; gap:8px; margin:14px 0 6px; font-size:.8125rem; color:var(--mut) }
 </style>
 </head>
 <body>
@@ -479,6 +485,7 @@ body.searching .fam{ display:block }
     <div class="sec-h rv"><h2>Para compartir</h2><div class="rule"></div></div>
     <p class="sec-sub rv">Lo que se pide al centro de la mesa. Siempre acompañado de una buena pinta.</p>
     <div class="duo" id="duo"></div>
+    <p class="veg-key"><span class="veg" role="img" aria-label="Vegetariano" title="Vegetariano"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C10.5 4 5 8.8 5 15c0 1.3.3 2.5.8 3.5L4 20.3 5.4 21.7l1.9-1.9c1 .5 2.1.7 3.3.7C17 20.5 20 14 20 4z"/><path class="n" d="M7.6 18.2c2-4.6 5-7.6 8.6-9.6"/></svg></span> Vegetariano</p>
     <div class="list" id="fritas"></div>
   </section>
 
@@ -494,10 +501,11 @@ body.searching .fam{ display:block }
     <div class="sec-h rv"><h2>Entre panes</h2><div class="rule"></div></div>
     <p class="sec-sub rv">Pachatas y lomos, bien cargados, en pan artesanal.</p>
     <h3 class="sub-h rv">Pachatas</h3>
+    <p class="sec-sub rv" style="margin-top:4px">150 gr de bife de ternera en pan baguette, con todo el sabor.</p>
     <div class="banner rv"><img data-px src="img/pachata.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 34%"><span>40 cm de sabor</span></div>
     <div class="list cols2" id="pachatas"></div>
     <h3 class="sub-h rv">Lomos</h3>
-    <p class="sec-sub rv" style="margin-top:4px">Bife de ternera en pan de lomo, con todo lo que va.</p>
+    <p class="sec-sub rv" style="margin-top:4px">250 gr de bife de ternera en pan de lomo, bien completo y con todo el sabor.</p>
     <div class="list cols2" id="lomos"></div>
   </section>
 
@@ -510,6 +518,7 @@ body.searching .fam{ display:block }
       <button role="tab" data-k="pza" class="on">Pizza · 8 porciones</button>
       <button role="tab" data-k="pzta">Pizzeta · 1 persona</button>
     </div>
+    <p class="veg-key"><span class="veg" role="img" aria-label="Vegetariano" title="Vegetariano"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C10.5 4 5 8.8 5 15c0 1.3.3 2.5.8 3.5L4 20.3 5.4 21.7l1.9-1.9c1 .5 2.1.7 3.3.7C17 20.5 20 14 20 4z"/><path class="n" d="M7.6 18.2c2-4.6 5-7.6 8.6-9.6"/></svg></span> Vegetariano</p>
     <div class="list cols2" id="pizzas-list"></div>
   </section>
 
@@ -579,7 +588,7 @@ const PROMOS=[
  {n:"Pinta + Hamburguesa", w:"Para 1", d:"Hamburguesa jugosa + una pinta (500 ml) bien fría.", p:"{{P:Pinta + Hamburguesa}}", a:"{{SUM:Hamburguesa Clasica;Golden Ale}}", s:"{{DIF:Pinta + Hamburguesa|Hamburguesa Clasica;Golden Ale}}", img:"hamburguesa.jpg", pos:"50% 30%"},
  {n:"Brahma + Fritas Clásicas", w:"Para 1", d:"Una Brahma bien fría (970 cc) + porción de fritas clásicas.", p:"{{P:Brahma + Fritas Clasicas}}", a:"{{SUM:Andes/Brahma;Fritas Clásicas}}", s:"{{DIF:Brahma + Fritas Clasicas|Andes/Brahma;Fritas Clásicas}}", img:"cheddar.jpg", pos:"50% 55%"},
  {n:"Brahma + Pizza Mozzarella", w:"Para 2", d:"Una Brahma helada (970 cc) + pizza de mozzarella con queso bien derretido.", p:"{{P:Brahma + Pizza Mozzarella}}", a:"{{SUM:Andes/Brahma;Pizza Mozzarella}}", s:"{{DIF:Brahma + Pizza Mozzarella|Andes/Brahma;Pizza Mozzarella}}", img:"pizza_pepperoni.jpg", pos:"50% 55%"},
- {n:"Mozzarella + Fritas Clásicas", w:"Para 2", d:"Pizza de mozzarella con abundante queso fundido + porción de fritas clásicas.", p:"{{P:Mozzarella + Fritas Clasicas}}", a:"{{SUM:Pizza Mozzarella;Fritas Clásicas}}", s:"{{DIF:Mozzarella + Fritas Clasicas|Pizza Mozzarella;Fritas Clásicas}}", img:"pizza_especial.jpg", pos:"50% 55%"},
+ {n:"Mozzarella + Fritas Clásicas", veg:1, w:"Para 2", d:"Pizza de mozzarella con abundante queso fundido + porción de fritas clásicas.", p:"{{P:Mozzarella + Fritas Clasicas}}", a:"{{SUM:Pizza Mozzarella;Fritas Clásicas}}", s:"{{DIF:Mozzarella + Fritas Clasicas|Pizza Mozzarella;Fritas Clásicas}}", img:"pizza_especial.jpg", pos:"50% 55%"},
  {n:"2 Hamburguesas + Fritas Clásicas", w:"Para 2", d:"Dos hamburguesas jugosas + porción de fritas clásicas bien crocantes.", p:"{{P:2 Hamburguesas + Fritas Clasicas}}", a:"{{SUM:2*Hamburguesa Clasica;Fritas Clásicas}}", s:"{{DIF:2 Hamburguesas + Fritas Clasicas|2*Hamburguesa Clasica;Fritas Clásicas}}", img:"hamburguesa.jpg", pos:"50% 62%"},
  {n:"2 Pachatas Ternera + Fritas Clásicas", w:"Para 2", d:"Dos generosas pachatas de ternera + porción de fritas clásicas.", p:"{{P:2 Pachatas Ternera + Fritas Clasicas}}", a:"{{SUM:2*Pachata Ternera;Fritas Clásicas}}", s:"{{DIF:2 Pachatas Ternera + Fritas Clasicas|2*Pachata Ternera;Fritas Clásicas}}", img:"pachata.jpg", pos:"50% 40%"},
  {n:"2 Pachatas de Cerdo con Fritas", w:"Para 2", d:"Dos pachatas de cerdo bien completas + porción de fritas clásicas con mayonesa casera.", p:"{{P:2 Pachatas de Cerdo con Fritas}}", a:"{{SUM:2*Pachata Cerdo Especial;Fritas Clásicas}}", s:"{{DIF:2 Pachatas de Cerdo con Fritas|2*Pachata Cerdo Especial;Fritas Clásicas}}", img:"pachata_cerdo.jpg", pos:"50% 55%"}
@@ -606,10 +615,10 @@ const COMPARTIR_FOTOS=[
 ];
 const FRITAS=[
  {n:"Fritas Brunder", star:1, feat:1, p:"{{P:Fritas con Cheddar y Panceta}}", d:"Cheddar fundido y panceta ahumada."},
- {n:"Fritas Gratinadas", p:"{{P:Fritas Gratinadas con Mozzarella y Verdeo}}", d:"Con mozzarella derretida y verdeo."},
- {n:"Fritas Caballo", p:"{{P:Fritas Caballo}}", d:"Fritas clásicas con 2 huevos fritos."},
- {n:"Fritas Bravas", p:"{{P:Fritas Bravas}}", d:"Fritas clásicas con salsa picante."},
- {n:"Fritas Clásicas", p:"{{P:Fritas Clásicas}}", d:"Doradas, crocantes, con mayonesa casera."}
+ {n:"Fritas Gratinadas", veg:1, p:"{{P:Fritas Gratinadas con Mozzarella y Verdeo}}", d:"Con mozzarella derretida y verdeo."},
+ {n:"Fritas Caballo", veg:1, p:"{{P:Fritas Caballo}}", d:"Fritas clásicas con 2 huevos fritos."},
+ {n:"Fritas Bravas", veg:1, p:"{{P:Fritas Bravas}}", d:"Fritas clásicas con salsa picante."},
+ {n:"Fritas Clásicas", veg:1, p:"{{P:Fritas Clásicas}}", d:"Doradas, crocantes, con mayonesa casera."}
 ];
 
 const BURGERS=[
@@ -642,14 +651,14 @@ const PIZZAS=[
  {n:"Especial", pta:"{{P:Pizzeta Especial}}", pza:"{{P:Pizza Especial}}", d:"Jamón cocido y morrón fresco sobre mozzarella."},
  {n:"Calabresa", pta:"{{P:Pizzeta Calabresa}}", pza:"{{P:Pizza Calabresa}}", d:"Rodajas de calabresa, con su toque picante."},
  {n:"Porky", pta:"{{P:Pizzeta Porky}}", pza:"{{P:Pizza Porky}}", d:"Salsa de tomates, mozzarella, bondiolita de cerdo y BBQ."},
- {n:"Napolitana", pta:"{{P:Pizzeta Napolitana}}", pza:"{{P:Pizza Napolitana}}", d:"Rodajas de tomate fresco, aceitunas y orégano."},
- {n:"Caprese", pta:"{{P:Pizzeta Caprese}}", pza:"{{P:Pizza Caprese}}", d:"Salsa de tomates, mozzarella, tomate, albahaca y aceitunas."},
- {n:"Fugazzeta", pta:"{{P:Pizzeta Fugazzeta}}", pza:"{{P:Pizza Fugazzeta}}", d:"Cebolla caramelizada y aceitunas sobre mozzarella."},
- {n:"Mozzarella", pta:"{{P:Pizzeta Mozzarella}}", pza:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano."}
+ {n:"Napolitana", veg:1, pta:"{{P:Pizzeta Napolitana}}", pza:"{{P:Pizza Napolitana}}", d:"Rodajas de tomate fresco, aceitunas y orégano."},
+ {n:"Caprese", veg:1, pta:"{{P:Pizzeta Caprese}}", pza:"{{P:Pizza Caprese}}", d:"Salsa de tomates, mozzarella, tomate, albahaca y aceitunas."},
+ {n:"Fugazzeta", veg:1, pta:"{{P:Pizzeta Fugazzeta}}", pza:"{{P:Pizza Fugazzeta}}", d:"Cebolla caramelizada y aceitunas sobre mozzarella."},
+ {n:"Mozzarella", veg:1, pta:"{{P:Pizzeta Mozzarella}}", pza:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano."}
 ];
 const PIZZA_FOTOS=[
  {n:"Pizza Pepperoni", tag:"Pepperoni", img:"pizza_pepperoni.jpg", pos:"50% 58%", p:"{{P:Pizza Pepperoni}}", d:"Salsa de tomates, mozzarella, rodajas de salame y aceitunas. Pizza de 8 porciones."},
- {n:"Pizza Mozzarella", tag:"Mozzarella", img:"pizza_mozza.jpg", pos:"50% 62%", p:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano. Pizza de 8 porciones. Con 2 pintas es la promo más pedida."}
+ {n:"Pizza Mozzarella", veg:1, tag:"Mozzarella", img:"pizza_mozza.jpg", pos:"50% 62%", p:"{{P:Pizza Mozzarella}}", d:"Salsa de tomate casera, mozzarella y orégano. Pizza de 8 porciones. Con 2 pintas es la promo más pedida."}
 ];
 
 const TRAGOS=[
@@ -750,15 +759,17 @@ function countTo(el,to,ms=300){
 const priceHTML=(p,cu)=>`<span class="pr${cu?' cu':''}" data-v="${num(p)}">${esc(p)}</span>`;
 
 /* ═══════════════════════ Construcción ═══════════════════════ */
+const VEG='<span class="veg" role="img" aria-label="Vegetariano" title="Vegetariano"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C10.5 4 5 8.8 5 15c0 1.3.3 2.5.8 3.5L4 20.3 5.4 21.7l1.9-1.9c1 .5 2.1.7 3.3.7C17 20.5 20 14 20 4z"/><path class="n" d="M7.6 18.2c2-4.6 5-7.6 8.6-9.6"/></svg></span>';
+const vegH=it=>it.veg?VEG:'';
 const isPrem=it=>it.tag==='Premium';
 const chipH=it=>it.tag?(isPrem(it)
   ?`<span class="chip prem">${esc(it.tag)}</span>`
   :`<span class="chip${it.dark?' dark':''}${it.feat||it.tag==='Recomendado'||it.tag==='La insignia'?' shine':''}">${esc(it.tag)}</span>`):'';
-const searchKey=it=>esc(norm([it.n,it.d,it.sm,it.tag,it.pair].filter(Boolean).join(' ')));
+const searchKey=it=>esc(norm([it.n,it.d,it.sm,it.tag,it.pair,it.veg?'vegetariano veggie':''].filter(Boolean).join(' ')));
 
 function rowHTML(it){
   return `<div class="row rv${it.feat?' feat':''}${isPrem(it)?' prem':''}" data-s="${searchKey(it)}">
-    <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${chipH(it)}${it.ml?`<em class="ml">${esc(it.ml)}</em>`:''}</div>
+    <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${vegH(it)}${chipH(it)}${it.ml?`<em class="ml">${esc(it.ml)}</em>`:''}</div>
     ${(it.d||it.sm)?`<p>${esc(it.d||it.sm)}</p>`:''}
     <span class="pr">${esc(it.p)}</span></div>`;
 }
@@ -769,14 +780,14 @@ function cardHTML(it,extra=''){
   return `<button class="card rv${it.wide?' wide':''}${extra}" data-open="${id}" data-s="${searchKey(it)}" aria-label="${esc(it.n)}, ver detalle">
     <img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos||'50% 50%'}">
     ${chipH(it)}
-    <div class="c-body"><h3>${esc(it.n)}</h3>${priceHTML(it.p,1)}</div><span class="plus" aria-hidden="true">+</span></button>`;
+    <div class="c-body"><h3>${esc(it.n)} ${vegH(it)}</h3>${priceHTML(it.p,1)}</div><span class="plus" aria-hidden="true">+</span></button>`;
 }
 
 /* Promos */
 $('#carousel').innerHTML=PROMOS.map(it=>`
   <article class="promo${it.feat?' feat':''}" data-s="${searchKey(it)}">
     <img src="img/${it.img}" alt="" loading="lazy" decoding="async" style="object-position:${it.pos}">
-    <div class="p-top"><span class="chip dark">${esc(it.w)}</span>${it.tag?`<span class="chip shine">${esc(it.tag)}</span>`:''}</div>
+    <div class="p-top"><span class="chip dark">${esc(it.w)}</span>${it.tag?`<span class="chip shine">${esc(it.tag)}</span>`:''}${vegH(it)}</div>
     <div class="p-body"><h3>${esc(it.n)}</h3><p>${esc(it.d)}</p>
       <div class="p-price">${priceHTML(it.p,0)}<span class="was">antes <s>$${esc(it.a)}</s></span></div>
       <span class="save">Ahorrás $${esc(it.s)}</span></div>
@@ -809,7 +820,7 @@ $('#pzphotos').innerHTML=PIZZA_FOTOS.map(it=>cardHTML(it)).join('');
 /* Pizzas: el selector cambia qué precio se ve */
 let pzKey='pza';
 $('#pizzas-list').innerHTML=PIZZAS.map(it=>`<div class="row rv${it.feat?' feat':''}${isPrem(it)?' prem':''}" data-s="${searchKey(it)}" data-pza="${num(it.pza)}" data-pzta="${num(it.pta)}">
-  <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${chipH(it)}</div><p>${esc(it.d)}</p>
+  <div class="row-n"><span class="nm">${esc(it.n)}${it.star?'<i class="star">★</i>':''}</span>${vegH(it)}${chipH(it)}</div><p>${esc(it.d)}</p>
   <span class="pr cu" data-v="${num(it.pza)}">${esc(it.pza)}</span></div>`).join('');
 function placeThumb(){
   const b=$('#pzseg button.on'), t=$('#pzthumb'); if(!b) return;
@@ -849,7 +860,7 @@ function openSheet(it){
   const hasImg=!!it.img; sheet.classList.toggle('noimg',!hasImg);
   if(hasImg){ const im=$('#sImg'); im.src='img/'+it.img; im.style.objectPosition=it.pos||'50% 50%'; }
   sBody.innerHTML=`${it.tag?`<div class="chips-r">${chipH({tag:it.tag,dark:it.dark})}</div>`:''}
-    <h3 id="sTitle">${esc(it.n)}</h3><span class="pr cu" data-v="${num(it.p)}">${esc(it.p)}</span>
+    <h3 id="sTitle">${esc(it.n)} ${vegH(it)}</h3><span class="pr cu" data-v="${num(it.p)}">${esc(it.p)}</span>
     <p>${esc(it.d||'')}</p>${it.pair?`<div class="pair"><b>Ideal con:</b> ${esc(it.pair)}</div>`:''}`;
   sBody.scrollTop=0;
   $$('.chip.shine,.chip.prem',sBody).forEach(el=>setTimeout(()=>lit(el),380));
